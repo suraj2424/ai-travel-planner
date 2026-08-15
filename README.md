@@ -8,6 +8,8 @@ An intelligent travel planning application that helps users create personalized 
 - **Runtime**: [Bun](https://bun.sh/) - Fast JavaScript runtime
 - **Framework**: [Express.js](https://expressjs.com/) v5
 - **Language**: TypeScript
+- **Database**: PostgreSQL with [Prisma ORM](https://www.prisma.io/)
+- **Validation**: [Zod](https://zod.dev/)
 - **Architecture**: Modular structure with clean separation of concerns
 
 ### Frontend
@@ -23,9 +25,19 @@ ai-travel-planner/
 │   │   ├── app/           # Express app configuration & routes
 │   │   ├── config/        # Configuration files (env, constants)
 │   │   ├── infrastructure/# Database, external services
-│   │   ├── modules/       # Feature modules (to be implemented)
+│   │   │   └── database/  # Prisma client & connection
+│   │   ├── modules/       # Feature modules
+│   │   │   └── users/     # User management module
 │   │   └── shared/        # Shared utilities, types, middleware
-│   └── package.json
+│   │       ├── errors/    # Custom error classes
+│   │       ├── middleware/# Express middleware
+│   │       ├── types/     # Shared TypeScript types
+│   │       ├── utils/     # Utility functions
+│   │       └── validation/# Zod validation schemas
+│   ├── package.json
+│   ├── prisma/
+│   │   └── schema.prisma  # Database schema
+│   └── README.md          # Server documentation
 └── README.md              # This file
 ```
 
@@ -34,6 +46,7 @@ ai-travel-planner/
 ### Prerequisites
 - [Bun](https://bun.sh/) v1.0+ installed
 - Node.js 18+ (for compatibility)
+- PostgreSQL database (local or cloud)
 
 ### Installation
 
@@ -45,6 +58,13 @@ cd ai-travel-planner
 # Install server dependencies
 cd server
 bun install
+
+# Set up environment variables
+cp .env.example .env  # Create .env with your DATABASE_URL
+
+# Set up database
+bunx prisma generate
+bunx prisma migrate dev
 ```
 
 ### Development
@@ -63,6 +83,7 @@ Create a `.env` file in the `server` directory:
 ```env
 PORT=3000
 NODE_ENV=development
+DATABASE_URL="postgresql://user:password@localhost:5432/ai_travel_planner?schema=public"
 ```
 
 ## 📡 API Endpoints
@@ -70,6 +91,8 @@ NODE_ENV=development
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | GET    | `/api/v1/health` | Health check endpoint |
+| POST   | `/api/v1/test-validation` | Test Zod validation |
+| POST   | `/api/v1/users` | Create a new user |
 
 *More endpoints coming as features are implemented.*
 
@@ -79,9 +102,19 @@ The backend follows a modular architecture:
 
 - **`app/`** - Express application setup, middleware, and main router
 - **`config/`** - Environment variables and application constants
-- **`modules/`** - Feature-based modules (each with its own routes, controllers, services)
-- **`shared/`** - Cross-cutting concerns (middleware, types, utilities, error handling)
+- **`modules/`** - Feature-based modules (each with routes, controllers, services, repository)
+- **`shared/`** - Cross-cutting concerns (middleware, types, utilities, error handling, validation)
 - **`infrastructure/`** - External integrations (database, AI services, third-party APIs)
+
+### Module Structure (e.g., `users`)
+```
+modules/users/
+├── user.routes.ts        # Route definitions
+├── user.controller.ts    # Request handlers
+├── user.service.ts       # Business logic
+├── user.repository.ts    # Data access (Prisma)
+└── user.dependencies.ts  # Dependency injection
+```
 
 ## 🧪 Testing
 
@@ -95,6 +128,24 @@ bun test
 ```bash
 # From the server directory
 bun build
+```
+
+## 🗄️ Database Commands
+
+```bash
+# From the server directory
+
+# Generate Prisma client
+bunx prisma generate
+
+# Run migrations
+bunx prisma migrate dev
+
+# Open Prisma Studio (GUI)
+bunx prisma studio
+
+# Reset database
+bunx prisma migrate reset
 ```
 
 ## 🤝 Contributing
@@ -114,3 +165,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Built with [Bun](https://bun.sh/) for speed
 - Express.js for the web framework
 - TypeScript for type safety
+- Prisma for database ORM
+- Zod for schema validation

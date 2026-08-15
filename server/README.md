@@ -1,6 +1,6 @@
 # AI Travel Planner - Server
 
-Backend API for the AI Travel Planner application, built with Express.js, TypeScript, and Bun.
+Backend API for the AI Travel Planner application, built with Express.js, TypeScript, Prisma, and Bun.
 
 ## 🚀 Quick Start
 
@@ -12,7 +12,7 @@ bun install
 bun run dev
 
 # Run production server
-bun run index.ts
+bun run src/server.ts
 ```
 
 The server runs at `http://localhost:3000` by default (configure via `PORT` env var).
@@ -22,16 +22,17 @@ The server runs at `http://localhost:3000` by default (configure via `PORT` env 
 | Command | Description |
 |---------|-------------|
 | `bun run dev` | Start development server with file watching |
-| `bun run index.ts` | Start production server |
+| `bun run src/server.ts` | Start production server |
 | `bun test` | Run tests |
 
 ## 🔧 Configuration
 
-Environment variables (create `.env` file):
+Environment variables (create `.env` file in server directory):
 
 ```env
 PORT=3000              # Server port (default: 3000)
 NODE_ENV=development   # Environment: development | production
+DATABASE_URL=          # PostgreSQL connection string (required for Prisma)
 ```
 
 ## 📡 API Reference
@@ -48,6 +49,54 @@ GET /api/v1/health
 }
 ```
 
+### Test Validation
+```
+POST /api/v1/test-validation
+```
+
+**Request Body:**
+```json
+{
+  "name": "string",
+  "age": "number"
+}
+```
+
+**Response:**
+```json
+{
+  "message": "Validation passed",
+  "data": { "name": "string", "age": "number" }
+}
+```
+
+### Users
+
+#### Create User
+```
+POST /api/v1/users
+```
+
+**Request Body:**
+```json
+{
+  "email": "user@example.com",
+  "name": "John Doe",
+  "password": "securepassword"
+}
+```
+
+**Response:** `201 Created`
+```json
+{
+  "id": "uuid",
+  "email": "user@example.com",
+  "name": "John Doe",
+  "createdAt": "2024-01-01T00:00:00.000Z",
+  "updatedAt": "2024-01-01T00:00:00.000Z"
+}
+```
+
 ## 🏗️ Project Structure
 
 ```
@@ -57,14 +106,33 @@ src/
 │   └── routes.ts   # Main router with API routes
 ├── config/
 │   ├── constants.ts  # API_VERSION, API_PREFIX
-│   └── env.ts        # Environment variables
-├── infrastructure/   # Database, external services (planned)
-├── modules/          # Feature modules (planned)
+│   └── env.ts        # Environment variables with validation
+├── infrastructure/
+│   └── database/
+│       ├── prisma.ts         # Prisma client singleton
+│       └── testConnection.ts # DB connection test script
+├── modules/
+│   └── users/
+│       ├── user.controller.ts     # Request handlers
+│       ├── user.service.ts        # Business logic
+│       ├── user.repository.ts     # Data access layer
+│       ├── user.routes.ts         # User routes
+│       └── user.dependencies.ts   # Dependency injection
 ├── shared/
-│   ├── errors/       # Custom error classes
-│   ├── middleware/   # Express middleware (request logger, etc.)
-│   ├── types/        # Shared TypeScript types
-│   └── utils/        # Utility functions
+│   ├── errors/
+│   │   ├── AppError.ts           # Base application error
+│   │   ├── BadRequestError.ts    # 400 errors
+│   │   └── NotFoundError.ts      # 404 errors
+│   ├── middleware/
+│   │   ├── errorHandler.ts       # Global error handler
+│   │   ├── notFound.ts           # 404 handler
+│   │   ├── requestLogger.ts      # Request logging
+│   │   └── validate.ts           # Zod validation middleware
+│   ├── types/                    # Shared TypeScript types (empty)
+│   ├── utils/                    # Utility functions (empty)
+│   └── validation/
+│       ├── test.schema.ts        # Test validation schema
+│       └── user.schema.ts        # User validation schema
 └── server.ts         # Entry point
 ```
 
@@ -73,26 +141,50 @@ src/
 ### Production
 - `express` ^5.2.1 - Web framework
 - `@types/express` ^5.0.6 - TypeScript definitions
+- `@prisma/client` ^7.9.1 - Prisma ORM client
+- `@prisma/adapter-pg` ^7.9.1 - PostgreSQL adapter
+- `zod` ^4.4.3 - Schema validation
 
 ### Development
 - `@types/bun` - Bun runtime types
 - `typescript` ^5 - TypeScript compiler
+- `prisma` ^7.9.1 - Prisma CLI
 
 ## 🛠️ Development
 
 ### Adding a New Module
 
 1. Create a folder under `src/modules/<feature>/`
-2. Add routes, controllers, services
-3. Register routes in `src/app/routes.ts`
+2. Add routes, controllers, services, repository
+3. Create validation schema in `src/shared/validation/`
+4. Register routes in `src/app/routes.ts`
+
+### Database (Prisma)
+
+```bash
+# Generate Prisma client after schema changes
+bunx prisma generate
+
+# Run migrations
+bunx prisma migrate dev
+
+# Open Prisma Studio
+bunx prisma studio
+```
 
 ### Middleware
 
-Shared middleware lives in `src/shared/middleware/`. Currently includes:
+Shared middleware lives in `src/shared/middleware/`:
+
 - `requestLogger` - Logs incoming requests
+- `validate` - Zod schema validation
+- `errorHandler` - Global error handling
+- `notFound` - 404 handler for unmatched routes
 
 ## 📝 Notes
 
 - This project uses ES modules (`"type": "module"` in package.json)
 - Import extensions (`.ts`) are required in imports
 - Built for Bun runtime but compatible with Node.js 18+
+- Uses Zod for request validation
+- Prisma ORM with PostgreSQL for database
