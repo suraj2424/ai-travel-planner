@@ -1,0 +1,25 @@
+User
+- id (primary key)
+- first_name
+- last_name
+- trips[]
+- conversations[]
+
+Trips
+- id
+- userId
+- start_date
+- end_date
+- destination
+
+Conversations
+- id
+- userId
+- messages[]
+
+
+Messages
+- id (sequencial)
+- conversationId
+- enum["user", "ai"]
+- message (string)

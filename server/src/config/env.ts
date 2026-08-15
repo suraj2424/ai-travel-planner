@@ -2,7 +2,8 @@ import { z } from "zod";
 
 const envSchema = z.object({
   PORT: z.coerce.number().int().min(1).max(65535),
-  NODE_ENV: z.enum(["development", "production", "test"])
+  NODE_ENV: z.enum(["development", "production", "test"]),
+  DATABASE_URL: z.string()
 });
 
 
@@ -16,5 +17,6 @@ if (!parsedEnv.success) {
 
 export const config = {
   port: parsedEnv.data.PORT,
-  environment: parsedEnv.data.NODE_ENV
+  environment: parsedEnv.data.NODE_ENV,
+  database_url: parsedEnv.data.DATABASE_URL
 }

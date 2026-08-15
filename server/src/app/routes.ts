@@ -2,6 +2,7 @@ import { Router } from "express";
 import type { Request, Response } from "express";
 import testSchema from "../shared/validation/test.schema";
 import validate from "../shared/middleware/validate";
+import userRouter from "../modules/users/user.routes"
 
 const router = Router();
 
@@ -21,6 +22,8 @@ router.post(
     });
   }
 );
+
+router.use(userRouter)
 
 
 
