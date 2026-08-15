@@ -1,5 +1,7 @@
 import { Router } from "express";
 import type { Request, Response } from "express";
+import testSchema from "../shared/validation/test.schema";
+import validate from "../shared/middleware/validate";
 
 const router = Router();
 
@@ -9,8 +11,17 @@ router.get("/health", (req: Request, res: Response) => {
     })
 });
 
-router.get("/test-error", (req: Request, res: Response) => {
-  throw new Error("Test Error");
-})
+router.post(
+  "/test-validation",
+  validate(testSchema),
+  (req: Request, res: Response) => {
+    return res.json({
+      message: "Validation passed",
+      data: req.body,
+    });
+  }
+);
+
+
 
 export default router;

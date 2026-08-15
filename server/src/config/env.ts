@@ -1,3 +1,20 @@
-export const port = Number(process.env.PORT);
+import { z } from "zod";
 
-export const environment = process.env.NODE_ENV;
+const envSchema = z.object({
+  PORT: z.coerce.number().int().min(1).max(65535),
+  NODE_ENV: z.enum(["development", "production", "test"])
+});
+
+
+const parsedEnv = envSchema.safeParse(process.env);
+
+if (!parsedEnv.success) {
+  console.error("Invalid environment configuration");
+  console.error(parsedEnv.error.issues);
+  process.exit(1);
+}
+
+export const config = {
+  port: parsedEnv.data.PORT,
+  environment: parsedEnv.data.NODE_ENV
+}
