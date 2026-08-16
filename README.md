@@ -27,10 +27,12 @@ ai-travel-planner/
 │   │   ├── infrastructure/# Database, external services
 │   │   │   └── database/  # Prisma client & connection
 │   │   ├── modules/       # Feature modules
+│   │   │   ├── auth/      # Authentication module
 │   │   │   └── users/     # User management module
 │   │   └── shared/        # Shared utilities, types, middleware
 │   │       ├── errors/    # Custom error classes
 │   │       ├── middleware/# Express middleware
+│   │       ├── security/  # Security utilities (password hashing)
 │   │       ├── types/     # Shared TypeScript types
 │   │       ├── utils/     # Utility functions
 │   │       └── validation/# Zod validation schemas
@@ -88,11 +90,16 @@ DATABASE_URL="postgresql://user:password@localhost:5432/ai_travel_planner?schema
 
 ## 📡 API Endpoints
 
+All endpoints are prefixed with `/api/v1`.
+
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET    | `/api/v1/health` | Health check endpoint |
-| POST   | `/api/v1/test-validation` | Test Zod validation |
-| POST   | `/api/v1/users` | Create a new user |
+| GET    | `/health` | Health check endpoint |
+| POST   | `/test-validation` | Test Zod validation |
+| POST   | `/auth/login` | User login |
+| POST   | `/users` | Create a new user |
+| GET    | `/users/:id` | Get user by ID |
+| GET    | `/users` | Get all users (paginated) |
 
 *More endpoints coming as features are implemented.*
 
@@ -103,7 +110,7 @@ The backend follows a modular architecture:
 - **`app/`** - Express application setup, middleware, and main router
 - **`config/`** - Environment variables and application constants
 - **`modules/`** - Feature-based modules (each with routes, controllers, services, repository)
-- **`shared/`** - Cross-cutting concerns (middleware, types, utilities, error handling, validation)
+- **`shared/`** - Cross-cutting concerns (middleware, types, utilities, error handling, validation, security)
 - **`infrastructure/`** - External integrations (database, AI services, third-party APIs)
 
 ### Module Structure (e.g., `users`)
@@ -116,18 +123,13 @@ modules/users/
 └── user.dependencies.ts  # Dependency injection
 ```
 
-## 🧪 Testing
-
-```bash
-# From the server directory
-bun test
+### Auth Module Structure
 ```
-
-## 📦 Build
-
-```bash
-# From the server directory
-bun build
+modules/auth/
+├── auth.routes.ts        # Route definitions
+├── auth.controller.ts    # Request handlers
+├── auth.service.ts       # Business logic
+└── auth.dependencies.ts  # Dependency injection
 ```
 
 ## 🗄️ Database Commands

@@ -23,7 +23,6 @@ The server runs at `http://localhost:3000` by default (configure via `PORT` env 
 |---------|-------------|
 | `bun run dev` | Start development server with file watching |
 | `bun run src/server.ts` | Start production server |
-| `bun test` | Run tests |
 
 ## 🔧 Configuration
 
@@ -37,9 +36,11 @@ DATABASE_URL=          # PostgreSQL connection string (required for Prisma)
 
 ## 📡 API Reference
 
+All endpoints are prefixed with `/api/v1`.
+
 ### Health Check
 ```
-GET /api/v1/health
+GET /health
 ```
 
 **Response:**
@@ -51,7 +52,7 @@ GET /api/v1/health
 
 ### Test Validation
 ```
-POST /api/v1/test-validation
+POST /test-validation
 ```
 
 **Request Body:**
@@ -70,18 +71,42 @@ POST /api/v1/test-validation
 }
 ```
 
-### Users
+### Authentication
 
-#### Create User
+#### Login
 ```
-POST /api/v1/users
+POST /auth/login
 ```
 
 **Request Body:**
 ```json
 {
   "email": "user@example.com",
-  "name": "John Doe",
+  "password": "securepassword"
+}
+```
+
+**Response:** `200 OK`
+```json
+{
+  "message": "Login successful",
+  "data": { ...userData }
+}
+```
+
+### Users
+
+#### Create User
+```
+POST /users
+```
+
+**Request Body:**
+```json
+{
+  "email": "user@example.com",
+  "firstName": "John",
+  "lastName": "Doe",
   "password": "securepassword"
 }
 ```
@@ -91,9 +116,53 @@ POST /api/v1/users
 {
   "id": "uuid",
   "email": "user@example.com",
-  "name": "John Doe",
+  "firstName": "John",
+  "lastName": "Doe",
+  "role": "user",
+  "status": "active",
   "createdAt": "2024-01-01T00:00:00.000Z",
   "updatedAt": "2024-01-01T00:00:00.000Z"
+}
+```
+
+#### Get User by ID
+```
+GET /users/:id
+```
+
+**Response:** `200 OK`
+```json
+{
+  "id": "uuid",
+  "email": "user@example.com",
+  "firstName": "John",
+  "lastName": "Doe",
+  "role": "user",
+  "status": "active",
+  "createdAt": "2024-01-01T00:00:00.000Z",
+  "updatedAt": "2024-01-01T00:00:00.000Z"
+}
+```
+
+#### Get All Users
+```
+GET /users?page=1&limit=10
+```
+
+**Query Parameters:**
+- `page` (optional): Page number (default: 1)
+- `limit` (optional): Items per page (default: 10)
+
+**Response:** `200 OK`
+```json
+{
+  "data": [...],
+  "meta": {
+    "total": 100,
+    "page": 1,
+    "limit": 10,
+    "totalPages": 10
+  }
 }
 ```
 
@@ -112,6 +181,11 @@ src/
 │       ├── prisma.ts         # Prisma client singleton
 │       └── testConnection.ts # DB connection test script
 ├── modules/
+│   ├── auth/
+│   │   ├── auth.controller.ts     # Request handlers
+│   │   ├── auth.service.ts        # Business logic
+│   │   ├── auth.routes.ts         # Auth routes
+│   │   └── auth.dependencies.ts   # Dependency injection
 │   └── users/
 │       ├── user.controller.ts     # Request handlers
 │       ├── user.service.ts        # Business logic
@@ -128,9 +202,12 @@ src/
 │   │   ├── notFound.ts           # 404 handler
 │   │   ├── requestLogger.ts      # Request logging
 │   │   └── validate.ts           # Zod validation middleware
-│   ├── types/                    # Shared TypeScript types (empty)
-│   ├── utils/                    # Utility functions (empty)
+│   ├── security/
+│   │   └── password.ts           # Password hashing & verification
+│   ├── types/                    # Shared TypeScript types
+│   ├── utils/                    # Utility functions
 │   └── validation/
+│       ├── auth.schema.ts        # Auth validation schema
 │       ├── test.schema.ts        # Test validation schema
 │       └── user.schema.ts        # User validation schema
 └── server.ts         # Entry point
@@ -188,3 +265,4 @@ Shared middleware lives in `src/shared/middleware/`:
 - Built for Bun runtime but compatible with Node.js 18+
 - Uses Zod for request validation
 - Prisma ORM with PostgreSQL for database
+- Passwords are hashed using bcrypt (via `shared/security/password.ts`)
