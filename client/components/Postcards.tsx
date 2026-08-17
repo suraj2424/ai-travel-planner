@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Reveal from "./Reveal";
 import { DESTINATIONS } from "@/lib/itinerary";
 
@@ -50,7 +51,7 @@ export default function Postcards() {
                 className={`group block w-full border-2 border-inkline bg-parchment p-3 pb-4 text-left shadow-[8px_10px_0_rgba(8,26,32,0.14)] transition-all duration-300 hover:z-10 hover:-translate-y-2 hover:rotate-0 hover:scale-[1.03] hover:shadow-[14px_18px_0_rgba(8,26,32,0.2)] ${ROTATIONS[i % ROTATIONS.length]}`}
               >
                 <div className="relative overflow-hidden">
-                  <img
+                  <Image
                     src={d.image}
                     alt={`${d.name}, ${d.country} — illustrated travel poster`}
                     width={400}
