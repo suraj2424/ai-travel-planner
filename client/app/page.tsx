@@ -2,7 +2,6 @@ import Link from "next/link";
 import {
   Sparkles,
   MapPin,
-  Calendar,
   ArrowRight,
   ArrowUpRight,
   Plane,
@@ -375,7 +374,7 @@ export default function LandingPage() {
       <section id="features" className="py-24">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-16 max-w-2xl mx-auto">
-            <Eyebrow>What we're building</Eyebrow>
+            <Eyebrow>What we&apos;re building</Eyebrow>
             <h2 className="text-3xl md:text-5xl font-bold tracking-[-0.03em] text-balance text-[var(--color-text-primary)] mb-5">
               Travel planning, the{" "}
               <span className="font-serif italic font-normal">desi</span> way
@@ -520,7 +519,7 @@ export default function LandingPage() {
             </h2>
             <p className="text-white/80 text-lg leading-relaxed mb-10 max-w-xl mx-auto">
               Join the early access and take your first AI-planned trip this
-              season. Free while we're in beta.
+              season. Free while we&apos;re in beta.
             </p>
             <Button
               href="/auth/signup"
@@ -549,7 +548,7 @@ export default function LandingPage() {
                 </span>
               </div>
               <p className="text-[var(--color-text-tertiary)] text-sm leading-relaxed max-w-sm">
-                From "where should we go?" to "when do we leave?" — AI trip
+                From `&quot;where should we go?`&quot; to `&quot;when do we leave?`&quot; — AI trip
                 planning built for Indian travellers.
               </p>
             </div>
