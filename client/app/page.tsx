@@ -20,8 +20,18 @@ import Button from "@/components/ui/button";
 
 /* Indian-traveller destination mix: visa-free / e-Visa favourites + domestic */
 const destinations = [
-  "Bali", "Goa", "Thailand", "Ladakh", "Vietnam", "Dubai",
-  "Sri Lanka", "Kerala", "Singapore", "Meghalaya", "Japan", "Rishikesh",
+  "Bali",
+  "Goa",
+  "Thailand",
+  "Ladakh",
+  "Vietnam",
+  "Dubai",
+  "Sri Lanka",
+  "Kerala",
+  "Singapore",
+  "Meghalaya",
+  "Japan",
+  "Rishikesh",
 ];
 
 const roadmap = [
@@ -74,24 +84,47 @@ export default function LandingPage() {
       {/* ───────────────────────── NAV ───────────────────────── */}
       <header className="fixed top-4 inset-x-0 z-50 px-4">
         <nav className="max-w-5xl mx-auto flex items-center justify-between gap-4 rounded-full border border-[var(--color-border)] bg-[var(--color-surface)]/85 backdrop-blur-xl pl-5 pr-2 py-2 shadow-sm">
-          <Link href="/" className="flex items-center gap-2.5 text-[var(--color-text-primary)]">
+          <Link
+            href="/"
+            className="flex items-center gap-2.5 text-[var(--color-text-primary)]"
+          >
             <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-[var(--color-brand-600)] text-white">
               <Plane className="w-4 h-4" />
             </span>
             <span className="font-bold tracking-tight">
-              AI Travel <span className="text-[var(--color-brand-600)]">Planner</span>
+              AI Travel{" "}
+              <span className="text-[var(--color-brand-600)]">Planner</span>
             </span>
           </Link>
 
           <div className="hidden md:flex items-center gap-8 text-sm font-medium text-[var(--color-text-secondary)]">
-            <Link href="#features" className="hover:text-[var(--color-text-primary)] transition-colors">Features</Link>
-            <Link href="#how-it-works" className="hover:text-[var(--color-text-primary)] transition-colors">How it works</Link>
-            <Link href="/auth/signin" className="hover:text-[var(--color-text-primary)] transition-colors">Sign in</Link>
+            <Link
+              href="#features"
+              className="hover:text-[var(--color-text-primary)] transition-colors"
+            >
+              Features
+            </Link>
+            <Link
+              href="#how-it-works"
+              className="hover:text-[var(--color-text-primary)] transition-colors"
+            >
+              How it works
+            </Link>
+            <Link
+              href="/auth/signin"
+              className="hover:text-[var(--color-text-primary)] transition-colors"
+            >
+              Sign in
+            </Link>
           </div>
 
           <div className="flex items-center gap-2">
             <ThemeToggle />
-            <Button href="/auth/signup" variant="primary" className="!px-5 !py-2 !text-sm !rounded-full">
+            <Button
+              href="/auth/signup"
+              variant="primary"
+              className="!px-5 !py-2 !text-sm !rounded-full"
+            >
               Early access
             </Button>
           </div>
@@ -101,7 +134,10 @@ export default function LandingPage() {
       {/* ───────────────────────── HERO ───────────────────────── */}
       <section className="relative pt-40 pb-24">
         {/* layers: grid → flight path → noise */}
-        <div className="absolute inset-0 bg-grid-pattern opacity-30 pointer-events-none" aria-hidden />
+        <div
+          className="absolute inset-0 bg-grid-pattern opacity-30 pointer-events-none"
+          aria-hidden
+        />
         <svg
           className="absolute inset-0 w-full h-full pointer-events-none"
           viewBox="0 0 1440 640"
@@ -119,7 +155,10 @@ export default function LandingPage() {
           />
           <circle cx="760" cy="340" r="3.5" fill="var(--color-accent-500)" />
         </svg>
-        <div className="absolute inset-0 bg-noise opacity-[0.04] pointer-events-none" aria-hidden />
+        <div
+          className="absolute inset-0 bg-noise opacity-[0.04] pointer-events-none"
+          aria-hidden
+        />
 
         <div className="relative max-w-4xl mx-auto px-6 text-center">
           <p className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[var(--color-border)] bg-[var(--color-surface-elevated)]/80 backdrop-blur text-xs font-medium text-[var(--color-text-secondary)] mb-9">
@@ -156,10 +195,18 @@ export default function LandingPage() {
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-            <Button href="/auth/signup" variant="primary" className="w-full sm:w-auto !text-base !px-7">
+            <Button
+              href="/auth/signup"
+              variant="primary"
+              className="w-full sm:w-auto !text-base !px-7"
+            >
               Start planning — free <ArrowRight className="w-4 h-4" />
             </Button>
-            <Button href="#how-it-works" variant="outline" className="w-full sm:w-auto !text-base !px-7">
+            <Button
+              href="#how-it-works"
+              variant="outline"
+              className="w-full sm:w-auto !text-base !px-7"
+            >
               See how it works
             </Button>
           </div>
@@ -170,7 +217,10 @@ export default function LandingPage() {
 
           {/* ── Product preview ── */}
           <div className="relative mt-24">
-            <div className="absolute -inset-x-8 -top-8 bottom-0 bg-[var(--color-brand-500)]/10 blur-3xl rounded-full pointer-events-none" aria-hidden />
+            <div
+              className="absolute -inset-x-8 -top-8 bottom-0 bg-[var(--color-brand-500)]/10 blur-3xl rounded-full pointer-events-none"
+              aria-hidden
+            />
 
             <div className="relative mx-auto max-w-2xl rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface-elevated)] shadow-2xl shadow-black/10 overflow-hidden text-left">
               {/* window bar */}
@@ -200,13 +250,26 @@ export default function LandingPage() {
                   </div>
                   <div className="flex-1 space-y-2.5 min-w-0">
                     <p className="text-xs font-semibold uppercase tracking-wider text-[var(--color-text-tertiary)]">
-                      Bali, Indonesia · 6 days · <span className="tabular-nums text-[var(--color-text-primary)]">₹58,400</span>/person
+                      Bali, Indonesia · 6 days ·{" "}
+                      <span className="tabular-nums text-[var(--color-text-primary)]">
+                        ₹58,400
+                      </span>
+                      /person
                     </p>
 
                     {[
-                      { day: "Day 1", plan: "Uluwatu sunset · Jimbaran dinner (veg menu)" },
-                      { day: "Day 2", plan: "Nusa Penida · Kelingking Beach · snorkelling" },
-                      { day: "Day 3", plan: "Ubud · Tegallalang terraces · Monkey Forest" },
+                      {
+                        day: "Day 1",
+                        plan: "Uluwatu sunset · Jimbaran dinner (veg menu)",
+                      },
+                      {
+                        day: "Day 2",
+                        plan: "Nusa Penida · Kelingking Beach · snorkelling",
+                      },
+                      {
+                        day: "Day 3",
+                        plan: "Ubud · Tegallalang terraces · Monkey Forest",
+                      },
                     ].map((item) => (
                       <div
                         key={item.day}
@@ -215,7 +278,9 @@ export default function LandingPage() {
                         <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--color-brand-600)] whitespace-nowrap">
                           {item.day}
                         </span>
-                        <span className="text-sm text-[var(--color-text-secondary)] truncate">{item.plan}</span>
+                        <span className="text-sm text-[var(--color-text-secondary)] truncate">
+                          {item.plan}
+                        </span>
                         <Check className="w-4 h-4 text-[var(--color-accent-500)] ml-auto shrink-0" />
                       </div>
                     ))}
@@ -224,7 +289,9 @@ export default function LandingPage() {
                     <div className="pt-2">
                       <div className="flex justify-between text-[11px] text-[var(--color-text-tertiary)] mb-1.5">
                         <span>Group poll</span>
-                        <span className="font-semibold text-[var(--color-text-primary)] tabular-nums">4 of 6 confirmed</span>
+                        <span className="font-semibold text-[var(--color-text-primary)] tabular-nums">
+                          4 of 6 confirmed
+                        </span>
                       </div>
                       <div className="h-1.5 rounded-full bg-[var(--color-border)] overflow-hidden">
                         <div className="h-full w-2/3 rounded-full bg-[var(--color-brand-500)]" />
@@ -237,12 +304,20 @@ export default function LandingPage() {
 
             {/* two quiet floating notes */}
             <div className="hidden lg:block absolute -left-16 top-24 animate-float rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-elevated)] px-4 py-3 shadow-lg shadow-black/5">
-              <p className="text-xs text-[var(--color-text-tertiary)] mb-0.5">Visa for Indians</p>
-              <p className="text-sm font-semibold text-[var(--color-text-primary)]">🇮🇩 Free on arrival</p>
+              <p className="text-xs text-[var(--color-text-tertiary)] mb-0.5">
+                Visa for Indians
+              </p>
+              <p className="text-sm font-semibold text-[var(--color-text-primary)]">
+                🇮🇩 Free on arrival
+              </p>
             </div>
             <div className="hidden lg:block absolute -right-12 bottom-20 animate-float-delayed rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-elevated)] px-4 py-3 shadow-lg shadow-black/5">
-              <p className="text-xs text-[var(--color-text-tertiary)] mb-0.5">Budget check</p>
-              <p className="text-sm font-semibold text-[var(--color-accent-600)] tabular-nums">₹1,600 under ✓</p>
+              <p className="text-xs text-[var(--color-text-tertiary)] mb-0.5">
+                Budget check
+              </p>
+              <p className="text-sm font-semibold text-[var(--color-accent-600)] tabular-nums">
+                ₹1,600 under ✓
+              </p>
             </div>
           </div>
         </div>
@@ -256,7 +331,10 @@ export default function LandingPage() {
               key={`${city}-${i}`}
               className="flex items-center gap-3 px-7 text-sm font-medium tracking-[0.18em] uppercase text-[var(--color-text-tertiary)]"
             >
-              <span className="w-1 h-1 rounded-full bg-[var(--color-accent-500)]" aria-hidden />
+              <span
+                className="w-1 h-1 rounded-full bg-[var(--color-accent-500)]"
+                aria-hidden
+              />
               {city}
             </span>
           ))}
@@ -269,13 +347,25 @@ export default function LandingPage() {
           {[
             { icon: Rocket, title: "Early access", note: "Building in public" },
             { icon: Gift, title: "Free in beta", note: "No paywall yet" },
-            { icon: Sparkles, title: "Made in India", note: "For Indian travellers" },
-            { icon: MessageSquare, title: "Feedback-driven", note: "You shape the roadmap" },
+            {
+              icon: Sparkles,
+              title: "Made in India",
+              note: "For Indian travellers",
+            },
+            {
+              icon: MessageSquare,
+              title: "Feedback-driven",
+              note: "You shape the roadmap",
+            },
           ].map((item) => (
             <div key={item.title} className="bg-[var(--color-surface)] p-8">
               <item.icon className="w-5 h-5 mb-4 text-[var(--color-brand-600)]" />
-              <p className="font-semibold text-[var(--color-text-primary)]">{item.title}</p>
-              <p className="text-sm text-[var(--color-text-tertiary)] mt-1">{item.note}</p>
+              <p className="font-semibold text-[var(--color-text-primary)]">
+                {item.title}
+              </p>
+              <p className="text-sm text-[var(--color-text-tertiary)] mt-1">
+                {item.note}
+              </p>
             </div>
           ))}
         </div>
@@ -287,7 +377,8 @@ export default function LandingPage() {
           <div className="text-center mb-16 max-w-2xl mx-auto">
             <Eyebrow>What we're building</Eyebrow>
             <h2 className="text-3xl md:text-5xl font-bold tracking-[-0.03em] text-balance text-[var(--color-text-primary)] mb-5">
-              Travel planning, the <span className="font-serif italic font-normal">desi</span> way
+              Travel planning, the{" "}
+              <span className="font-serif italic font-normal">desi</span> way
             </h2>
             <p className="text-[var(--color-text-secondary)] text-lg leading-relaxed">
               Most planners are built for Western travellers. Ours starts with
@@ -316,8 +407,12 @@ export default function LandingPage() {
           {/* roadmap */}
           <div className="mt-6 rounded-2xl border border-[var(--color-border)] p-8 md:p-10 flex flex-col md:flex-row md:items-center gap-8">
             <div className="shrink-0 md:w-52">
-              <p className="font-semibold text-[var(--color-text-primary)]">On the roadmap</p>
-              <p className="text-sm text-[var(--color-text-tertiary)] mt-1">Coming through the beta.</p>
+              <p className="font-semibold text-[var(--color-text-primary)]">
+                On the roadmap
+              </p>
+              <p className="text-sm text-[var(--color-text-tertiary)] mt-1">
+                Coming through the beta.
+              </p>
             </div>
             <div className="flex flex-wrap gap-2.5">
               {roadmap.map((item) => (
@@ -334,12 +429,16 @@ export default function LandingPage() {
       </section>
 
       {/* ───────────────────────── HOW IT WORKS ───────────────────────── */}
-      <section id="how-it-works" className="py-24 border-y border-[var(--color-border)] bg-[var(--color-surface-muted)]">
+      <section
+        id="how-it-works"
+        className="py-24 border-y border-[var(--color-border)] bg-[var(--color-surface-muted)]"
+      >
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-20 max-w-2xl mx-auto">
             <Eyebrow>How it works</Eyebrow>
             <h2 className="text-3xl md:text-5xl font-bold tracking-[-0.03em] text-balance text-[var(--color-text-primary)]">
-              Idea to itinerary in <span className="font-serif italic font-normal">three steps</span>
+              Idea to itinerary in{" "}
+              <span className="font-serif italic font-normal">three steps</span>
             </h2>
           </div>
 
@@ -360,10 +459,15 @@ export default function LandingPage() {
                   <h3 className="text-xl font-semibold tracking-tight text-[var(--color-text-primary)] mb-3">
                     {step.title}
                   </h3>
-                  <p className="text-[var(--color-text-secondary)] leading-relaxed">{step.description}</p>
+                  <p className="text-[var(--color-text-secondary)] leading-relaxed">
+                    {step.description}
+                  </p>
                 </div>
                 {i < steps.length - 1 && (
-                  <span className="hidden md:block absolute top-6 -right-4 text-[var(--color-text-tertiary)]" aria-hidden>
+                  <span
+                    className="hidden md:block absolute top-6 -right-4 text-[var(--color-text-tertiary)]"
+                    aria-hidden
+                  >
                     <ArrowUpRight className="w-4 h-4 rotate-45" />
                   </span>
                 )}
@@ -404,11 +508,15 @@ export default function LandingPage() {
               className="animate-dash"
             />
           </svg>
-          <div className="absolute inset-0 bg-noise opacity-[0.06] pointer-events-none" aria-hidden />
+          <div
+            className="absolute inset-0 bg-noise opacity-[0.06] pointer-events-none"
+            aria-hidden
+          />
 
           <div className="relative z-10">
             <h2 className="text-4xl md:text-6xl font-bold tracking-[-0.03em] text-balance text-white mb-6">
-              <span className="font-serif italic font-normal">Chalo,</span> plan karte hain.
+              <span className="font-serif italic font-normal">Chalo,</span> plan
+              karte hain.
             </h2>
             <p className="text-white/80 text-lg leading-relaxed mb-10 max-w-xl mx-auto">
               Join the early access and take your first AI-planned trip this
@@ -420,7 +528,9 @@ export default function LandingPage() {
             >
               Get early access <ArrowRight className="w-4 h-4" />
             </Button>
-            <p className="mt-6 text-white/60 text-sm">No credit card required</p>
+            <p className="mt-6 text-white/60 text-sm">
+              No credit card required
+            </p>
           </div>
         </div>
       </section>
@@ -445,19 +555,58 @@ export default function LandingPage() {
             </div>
 
             <div>
-              <p className="text-sm font-semibold text-[var(--color-text-primary)] mb-4">Product</p>
+              <p className="text-sm font-semibold text-[var(--color-text-primary)] mb-4">
+                Product
+              </p>
               <ul className="space-y-3 text-sm text-[var(--color-text-secondary)]">
-                <li><Link href="#features" className="hover:text-[var(--color-text-primary)] transition-colors">Features</Link></li>
-                <li><Link href="#how-it-works" className="hover:text-[var(--color-text-primary)] transition-colors">How it works</Link></li>
-                <li><Link href="/auth/signup" className="hover:text-[var(--color-text-primary)] transition-colors">Early access</Link></li>
+                <li>
+                  <Link
+                    href="#features"
+                    className="hover:text-[var(--color-text-primary)] transition-colors"
+                  >
+                    Features
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="#how-it-works"
+                    className="hover:text-[var(--color-text-primary)] transition-colors"
+                  >
+                    How it works
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/auth/signup"
+                    className="hover:text-[var(--color-text-primary)] transition-colors"
+                  >
+                    Early access
+                  </Link>
+                </li>
               </ul>
             </div>
 
             <div>
-              <p className="text-sm font-semibold text-[var(--color-text-primary)] mb-4">Legal</p>
+              <p className="text-sm font-semibold text-[var(--color-text-primary)] mb-4">
+                Legal
+              </p>
               <ul className="space-y-3 text-sm text-[var(--color-text-secondary)]">
-                <li><Link href="#" className="hover:text-[var(--color-text-primary)] transition-colors">Privacy</Link></li>
-                <li><Link href="#" className="hover:text-[var(--color-text-primary)] transition-colors">Terms</Link></li>
+                <li>
+                  <Link
+                    href="#"
+                    className="hover:text-[var(--color-text-primary)] transition-colors"
+                  >
+                    Privacy
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="#"
+                    className="hover:text-[var(--color-text-primary)] transition-colors"
+                  >
+                    Terms
+                  </Link>
+                </li>
               </ul>
             </div>
           </div>
