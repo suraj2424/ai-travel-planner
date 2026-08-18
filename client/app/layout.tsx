@@ -1,30 +1,25 @@
 import type { Metadata } from "next";
-import type { ReactNode } from "react";
-import {
-  Geist
-} from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
 
-const geist = Geist({
+const inter = Inter({ 
   subsets: ["latin"],
-  variable: "--font-geist",
-  weight: ["400"]
-})
-
+  variable: "--font-sans",
+});
 
 export const metadata: Metadata = {
-  title: "AI Travel Planner",
-  description:
-    "Tell it a feeling, get back a flight plan. This app turns half-sentences into day-by-day itineraries with local secrets baked in.",
+  title: "AI Travel Planner – Plan Your Perfect Trip",
+  description: "Generate personalized travel itineraries in seconds with AI. Stop researching and start exploring.",
 };
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
-    <html
-      lang="en"
-      className={`${geist.variable}`}
-    >
-      <body>{children}</body>
+    <html lang="en" className={inter.variable}>
+      <body className="antialiased">{children}</body>
     </html>
   );
 }
