@@ -26,6 +26,8 @@
   --color-text-primary: #1c1917;
   --color-text-secondary: #57534e;
   --color-text-tertiary: #a8a29e;
+  --color-bubble: #0891b2;   /* chat bubble fill */
+  --color-cta: #0e7490;   
 
   --shadow-brand: 0 4px 14px -3px rgba(13, 148, 136, 0.35);
   --shadow-card: 0 1px 3px rgba(28, 25, 23, 0.06), 0 6px 16px -4px rgba(28, 25, 23, 0.1);
@@ -52,6 +54,8 @@
   --color-text-primary: #faf8f6;
   --color-text-secondary: #a8a29e;
   --color-text-tertiary: #78716c;
+  --color-bubble: #155e75;   /* deep petrol, not neon */
+  --color-cta: #083344;      /* near-black teal */
 
   --shadow-brand: 0 4px 14px -3px rgba(45, 212, 191, 0.3);
   --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.2), 0 6px 16px -4px rgba(0, 0, 0, 0.3);
