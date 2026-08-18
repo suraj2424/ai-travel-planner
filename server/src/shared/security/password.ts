@@ -5,3 +5,4 @@ export async function hashPassword(password: string) {
 export async function verifyPassword(password: string, passwordHash: string) {
   return Bun.password.verify(password, passwordHash);
 }
+

@@ -11,7 +11,15 @@ class AuthController {
 
     return res.status(200).json({
       data,
-    })
+    });
+  }
+
+  createNewAccessToken = async (req: Request, res: Response) => {
+    const data = await this.authService.createNewAccessToken(req.body);
+
+    return res.status(200).json({
+      data
+    });
   }
 }
 

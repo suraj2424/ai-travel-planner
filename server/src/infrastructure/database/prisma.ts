@@ -13,7 +13,7 @@ const prisma = new PrismaClient({
 
 export async function connectDatabase() {
   await prisma.$connect();
-  console.log("Database connected");
+  console.log("PostgreSQL Database connected");
 }
 
 export default prisma;

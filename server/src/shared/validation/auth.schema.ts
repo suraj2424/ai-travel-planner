@@ -5,4 +5,8 @@ const authSchema = z.object({
   password: z.string().min(8)
 })
 
+export const refreshTokenSchema = z.object({
+  refreshToken: z.string().min(1),
+});
+
 export default authSchema;
