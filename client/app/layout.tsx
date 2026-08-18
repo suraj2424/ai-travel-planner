@@ -13,12 +13,21 @@ const instrumentSerif = Instrument_Serif({
 
 export const metadata: Metadata = {
   title: "AI Travel Planner — Plan trips made for Indian travellers",
-  description: "AI itineraries for Indian travellers: visa-free picks, ₹ budgets, veg-friendly food, and plans your whole group agrees on.",
+  description:
+    "AI itineraries for Indian travellers: visa-free picks, ₹ budgets, veg-friendly food, and plans your whole group agrees on.",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    <html lang="en" className={`${inter.variable} ${instrumentSerif.variable}`} suppressHydrationWarning>
+    <html
+      lang="en"
+      className={`${inter.variable} ${instrumentSerif.variable}`}
+      suppressHydrationWarning
+    >
       <head>
         <script
           dangerouslySetInnerHTML={{
