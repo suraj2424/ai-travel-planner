@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import "./globals.css";
+import ReduxProvider from "@/lib/redux/provider";
+
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const playfair = Playfair_Display({
@@ -41,7 +43,9 @@ export default function RootLayout({
             `,
           }}
         />
-        <ThemeProvider>{children}</ThemeProvider>
+        <ReduxProvider>
+          <ThemeProvider>{children}</ThemeProvider>
+        </ReduxProvider>
       </body>
     </html>
   );
