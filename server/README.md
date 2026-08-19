@@ -29,9 +29,11 @@ The server runs at `http://localhost:3000` by default (configure via `PORT` env 
 Environment variables (create `.env` file in server directory):
 
 ```env
-PORT=3000              # Server port (default: 3000)
-NODE_ENV=development   # Environment: development | production
-DATABASE_URL=          # PostgreSQL connection string (required for Prisma)
+PORT=3000                    # Server port (default: 3000)
+NODE_ENV=development         # Environment: development | production
+DATABASE_URL=                # PostgreSQL connection string (required for Prisma)
+JWT_SECRET=                  # Secret for access tokens
+JWT_REFRESH_SECRET=          # Secret for refresh tokens
 ```
 
 ## 📡 API Reference
@@ -90,13 +92,54 @@ POST /auth/login
 ```json
 {
   "message": "Login successful",
-  "data": { ...userData }
+  "data": {
+    "accessToken": "eyJhbGciOiJIUzI1NiIs...",
+    "user": {
+      "id": "uuid",
+      "email": "user@example.com",
+      "firstName": "John",
+      "lastName": "Doe"
+    }
+  }
 }
 ```
 
+**Cookies Set:**
+- `accessToken` - HTTP-only, secure, same-site strict (short-lived)
+- `refreshToken` - HTTP-only, secure, same-site strict (longer-lived)
+
+#### Refresh Token
+```
+POST /auth/refresh
+```
+
+**Response:** `200 OK`
+```json
+{
+  "message": "Token refreshed",
+  "data": {
+    "accessToken": "eyJhbGciOiJIUzI1NiIs..."
+  }
+}
+```
+
+#### Logout
+```
+POST /auth/logout
+```
+
+**Response:** `200 OK`
+```json
+{
+  "message": "Logged out successfully"
+}
+```
+
+**Cookies Cleared:** `accessToken`, `refreshToken`
+
 ### Users
 
-#### Create User
+#### Create User (Register)
 ```
 POST /users
 ```
@@ -183,7 +226,7 @@ src/
 ├── modules/
 │   ├── auth/
 │   │   ├── auth.controller.ts     # Request handlers
-│   │   ├── auth.service.ts        # Business logic
+│   │   ├── auth.service.ts        # Business logic (JWT, passwords)
 │   │   ├── auth.routes.ts         # Auth routes
 │   │   └── auth.dependencies.ts   # Dependency injection
 │   └── users/
@@ -221,9 +264,14 @@ src/
 - `@prisma/client` ^7.9.1 - Prisma ORM client
 - `@prisma/adapter-pg` ^7.9.1 - PostgreSQL adapter
 - `zod` ^4.4.3 - Schema validation
+- `cookie-parser` ^1.4.7 - Cookie parsing
+- `cors` ^2.8.6 - CORS middleware
+- `jose` ^6.2.9 - JWT handling (sign/verify)
 
 ### Development
 - `@types/bun` - Bun runtime types
+- `@types/cookie-parser` ^1.4.10 - Cookie parser types
+- `@types/cors` ^2.8.19 - CORS types
 - `typescript` ^5 - TypeScript compiler
 - `prisma` ^7.9.1 - Prisma CLI
 
@@ -247,16 +295,61 @@ bunx prisma migrate dev
 
 # Open Prisma Studio
 bunx prisma studio
+
+# Reset database
+bunx prisma migrate reset
+```
+
+### Database Schema
+
+```prisma
+model User {
+  id            String    @id @default(uuid()) @db.Uuid
+  email         String    @unique
+  firstName     String
+  lastName      String
+  passwordHash  String
+  role          String    @default("user")
+  status        String    @default("active")
+  sessions      Session[]
+  createdAt     DateTime  @default(now()) @db.Timestamptz
+  updatedAt     DateTime  @default(now()) @updatedAt @db.Timestamptz
+}
+
+model Session {
+  id               String   @id @default(uuid()) @db.Uuid
+  userId           String   @db.Uuid
+  refreshTokenHash String   @unique
+  expiresAt        DateTime @db.Timestamptz
+  createdAt        DateTime @default(now()) @db.Timestamptz
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
 ```
 
 ### Middleware
 
 Shared middleware lives in `src/shared/middleware/`:
-
 - `requestLogger` - Logs incoming requests
 - `validate` - Zod schema validation
 - `errorHandler` - Global error handling
 - `notFound` - 404 handler for unmatched routes
+
+### Authentication Implementation
+
+- **Access Tokens** - Short-lived (15min), JWT signed with `JWT_SECRET`
+- **Refresh Tokens** - Longer-lived (7 days), stored hashed in database
+- **Token Rotation** - New refresh token issued on each refresh
+- **Secure Cookies** - HTTP-only, Secure, SameSite=Strict
+- **Logout** - Invalidates refresh token in database
+
+### Validation
+
+Zod schemas in `src/shared/validation/`:
+- `auth.schema.ts` - Login, register, refresh validation
+- `user.schema.ts` - User CRUD validation
+- `test.schema.ts` - Example validation
+
+Use `validate(schema)` middleware in routes.
 
 ## 📝 Notes
 
@@ -266,3 +359,5 @@ Shared middleware lives in `src/shared/middleware/`:
 - Uses Zod for request validation
 - Prisma ORM with PostgreSQL for database
 - Passwords are hashed using bcrypt (via `shared/security/password.ts`)
+- JWT tokens handled via `jose` library (Web Crypto API compatible)
+- Dependency injection pattern for module wiring
