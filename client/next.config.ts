@@ -1,9 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-} as unknown as NextConfig;
+  // ❌ delete this whole block
+  // eslint: {
+  //   ignoreDuringBuilds: true,
+  // },
+};
 
 export default nextConfig;

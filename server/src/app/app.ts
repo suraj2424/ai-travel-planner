@@ -1,11 +1,22 @@
 import express from "express"
-import router from "./routes"
-import { API_PREFIX, API_VERSION } from "../config/constants"
-const app = express();
+import cors from "cors";
+import cookieParser from "cookie-parser";
 import logRequests from "../shared/middleware/requestLogger";
 import notFound from "../shared/middleware/notFound";
 import errorHandler from "../shared/middleware/errorHandler";
+import router from "./routes"
+import { API_PREFIX, API_VERSION } from "../config/constants"
 
+
+const app = express();
+
+app.use(cookieParser());
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  }),
+);
 app.use(express.json())
 
 app.use(logRequests);

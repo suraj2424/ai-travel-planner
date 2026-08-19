@@ -4,7 +4,6 @@ import { ThemeProvider } from "@/components/theme-provider";
 import "./globals.css";
 import ReduxProvider from "@/lib/redux/provider";
 
-
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const playfair = Playfair_Display({
   subsets: ["latin"],

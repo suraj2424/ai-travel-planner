@@ -5,8 +5,8 @@ import authSchema, { refreshTokenSchema } from "../../shared/validation/auth.sch
 
 const router = express.Router();
 
-router.post("/auth/login", validate(authSchema), authController.loginUser);
+router.post("/auth/login", validate(authSchema, "body"), authController.loginUser);
 
-router.post("/auth/refresh", validate(refreshTokenSchema), authController.createNewAccessToken)
+router.post("/auth/refresh", validate(refreshTokenSchema, "cookies"), authController.createNewAccessToken)
 
 export default router;

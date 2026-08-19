@@ -4,7 +4,7 @@ import { config } from "../../config/env";
 
 
 const adapter = new PrismaPg({
-  connectionString: config.database_url
+  connectionString: `${config.database_url}?timezone=UTC`
 });
 
 const prisma = new PrismaClient({

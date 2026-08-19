@@ -9,9 +9,9 @@ class UserController {
 
   createUser = async (req: Request, res: Response) => {
     const requestBody = req.body;
-    const data = await this.userService.createUser(requestBody);
+    await this.userService.createUser(requestBody);
     return res.status(201).json({
-      data
+      message: "User created successfully"
     });
   }
 

@@ -62,8 +62,14 @@ class AuthService {
     const modified_refresh_token = `${session.id}.${refresh_token}`;
 
     const responseData = {
-      token: access_token,
-      refresh_token: modified_refresh_token,
+      accessToken: access_token,
+      refreshToken: modified_refresh_token,
+      user: {
+        id: fetchedUser.id,
+        firstName: fetchedUser.firstName,
+        lastName: fetchedUser.lastName,
+        email: fetchedUser.email
+      }
     };
 
     return responseData;
@@ -101,18 +107,19 @@ class AuthService {
       );
     }
 
-    if (Date.now() < currentSession.expiresAt.getTime()) {
-      const new_token = await generateAccessToken(currentSession.userId);
-      return {
-        token: new_token,
-        refresh_token: refresh_token,
-      };
-    } else {
+    if (currentSession.expiresAt.getTime() <= Date.now()) {
       // return error unauthorized
       throw new UnauthorizedError(
         "REFRESH_TOKEN_EXPIRED",
         "Refresh Token Expired",
       );
+    } else {
+      
+      const new_token = await generateAccessToken(currentSession.userId);
+      return {
+        accessToken: new_token,
+        refreshToken: refresh_token,
+      };
     }
   }
 }
