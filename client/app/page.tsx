@@ -16,6 +16,7 @@ import {
 import { ThemeToggle } from "@/components/theme-toggle";
 import FeatureCard from "@/components/ui/featureCard";
 import Button from "@/components/ui/button";
+import IndiaMap from "@/components/ui/india-map";
 
 const destinations = [
   "Bali",
@@ -240,263 +241,265 @@ export default function LandingPage() {
       </header>
 
       {/* ───────────────────────── HERO ───────────────────────── */}
-      <section className="relative pt-40 pb-24">
+      <section className="relative pt-20 pb-24 overflow-hidden">
+        {/* ambient layers */}
         <div
-          className="absolute inset-0 bg-grid-pattern opacity-30 pointer-events-none"
+          className="absolute inset-0 bg-grid-pattern opacity-20 pointer-events-none"
           aria-hidden
         />
-        <svg
-          className="absolute inset-0 w-full h-full pointer-events-none"
-          viewBox="0 0 1440 640"
-          preserveAspectRatio="none"
-          aria-hidden
-        >
-          <path
-            d="M -60 500 C 260 380, 480 560, 760 340 S 1240 140, 1520 220"
-            fill="none"
-            stroke="var(--color-brand-500)"
-            strokeOpacity="0.35"
-            strokeWidth="1.5"
-            strokeDasharray="6 9"
-            className="animate-dash"
-          />
-          <circle cx="760" cy="340" r="3.5" fill="var(--color-accent-500)" />
-        </svg>
         <div
           className="absolute inset-0 bg-noise opacity-[0.04] pointer-events-none"
           aria-hidden
         />
 
-        <div className="relative max-w-4xl mx-auto px-6 text-center">
-          <p className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[var(--color-border)] bg-[var(--color-surface-elevated)]/80 backdrop-blur text-xs font-medium text-[var(--color-text-secondary)] mb-9">
-            <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-accent-500)] animate-pulse" />
-            Early access · Built for Indian travellers
-          </p>
+        <div className="relative max-w-7xl mx-auto px-6 grid lg:grid-cols-[1fr_0.85fr] gap-16 items-center">
+          {/* ── Left: copy ── */}
+          <div>
+            <p className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[var(--color-border)] bg-[var(--color-surface-elevated)]/80 backdrop-blur text-xs font-medium text-[var(--color-text-secondary)] mb-8">
+              <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-accent-500)] animate-pulse" />
+              Early access · Built for Indian travellers
+            </p>
 
-          <h1 className="text-5xl md:text-7xl font-bold tracking-[-0.04em] leading-[1.04] text-balance text-[var(--color-text-primary)] mb-7">
-            From group chat to{" "}
-            <span className="relative inline-block font-serif italic font-normal">
-              boarding pass.
-              <svg
-                className="absolute left-0 -bottom-1.5 w-full"
-                viewBox="0 0 300 14"
-                preserveAspectRatio="none"
-                fill="none"
-                aria-hidden
+            <h1 className="text-5xl md:text-6xl xl:text-7xl font-bold tracking-[-0.04em] leading-[1.05] text-[var(--color-text-primary)] mb-6">
+              From group chat to{" "}
+              <span className="relative inline-block font-serif italic font-normal">
+                boarding pass.
+                <svg
+                  className="absolute left-0 -bottom-1.5 w-full"
+                  viewBox="0 0 300 14"
+                  preserveAspectRatio="none"
+                  fill="none"
+                  aria-hidden
+                >
+                  <path
+                    d="M3 9 C 55 3, 110 13, 165 7 S 270 5, 297 8"
+                    stroke="var(--color-accent-500)"
+                    strokeWidth="4"
+                    strokeLinecap="round"
+                  />
+                </svg>
+              </span>
+            </h1>
+
+            <p className="text-lg md:text-xl leading-relaxed text-[var(--color-text-secondary)] max-w-lg mb-10">
+              AI trip plans made for the way Indians travel — visa-free picks
+              for Indian passports, budgets in ₹, veg-friendly stops, and
+              itineraries your whole group will actually agree on.
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-3">
+              <Button
+                href="/auth/signup"
+                variant="primary"
+                className="w-full sm:w-auto !text-base !px-7"
               >
-                <path
-                  d="M3 9 C 55 3, 110 13, 165 7 S 270 5, 297 8"
-                  stroke="var(--color-accent-500)"
-                  strokeWidth="4"
-                  strokeLinecap="round"
-                />
-              </svg>
-            </span>
-          </h1>
+                Start planning — free <ArrowRight className="w-4 h-4" />
+              </Button>
+              <Button
+                href="#how-it-works"
+                variant="outline"
+                className="w-full sm:w-auto !text-base !px-7"
+              >
+                See how it works
+              </Button>
+            </div>
 
-          <p className="text-lg md:text-xl leading-relaxed text-[var(--color-text-secondary)] max-w-2xl mx-auto mb-11">
-            AI trip plans made for the way Indians travel — visa-free picks for
-            Indian passports, budgets in ₹, veg-friendly stops, and itineraries
-            your whole group will actually agree on.
-          </p>
-
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-            <Button
-              href="/auth/signup"
-              variant="primary"
-              className="w-full sm:w-auto !text-base !px-7"
-            >
-              Start planning — free <ArrowRight className="w-4 h-4" />
-            </Button>
-            <Button
-              href="#how-it-works"
-              variant="outline"
-              className="w-full sm:w-auto !text-base !px-7"
-            >
-              See how it works
-            </Button>
+            <p className="mt-8 text-sm text-[var(--color-text-tertiary)]">
+              Free during beta · No credit card required
+            </p>
           </div>
 
-          <p className="mt-8 text-sm text-[var(--color-text-tertiary)]">
-            Free during beta · No credit card required
-          </p>
-
-          {/* ── Product preview — live chat ── */}
-          <div className="relative mt-24">
+          {/* ── Right: the map gets its own stage ── */}
+          <div className="hidden lg:block relative">
             <div
-              className="absolute -inset-x-8 -top-8 bottom-0 bg-[var(--color-brand-500)]/10 blur-3xl rounded-full pointer-events-none"
+              className="absolute -inset-8 bg-[var(--color-brand-500)]/10 blur-3xl rounded-full pointer-events-none"
               aria-hidden
             />
+            <IndiaMap className="relative h-[620px] xl:h-[680px] w-full" />
+          </div>
+        </div>
 
-            <div className="relative mx-auto max-w-xl rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface-elevated)] shadow-2xl shadow-black/10 overflow-hidden text-left">
-              {/* chat header */}
-              <div className="flex items-center gap-3 px-5 py-3.5 border-b border-[var(--color-border)]">
-                <div className="relative">
-                  <span className="flex items-center justify-center w-9 h-9 rounded-full bg-[var(--color-text-primary)]">
-                    <Sparkles className="w-4 h-4 text-[var(--color-accent-400)]" />
-                  </span>
-                  <span
-                    className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-[var(--color-accent-500)] border-2 border-[var(--color-surface-elevated)]"
-                    aria-hidden
-                  />
-                </div>
-                <div className="flex-1">
-                  <p className="text-sm font-semibold text-[var(--color-text-primary)] leading-tight">
-                    Trip AI
-                  </p>
-                  <p className="text-[11px] text-[var(--color-text-tertiary)]">
-                    online · replies instantly
-                  </p>
-                </div>
-                <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--color-text-tertiary)] border border-[var(--color-border)] rounded-full px-2.5 py-1">
-                  Preview
+        {/* ── Chat preview below, centered ── */}
+        <div className="relative max-w-4xl mx-auto px-6 mt-24">
+          <div
+            className="absolute -inset-x-8 -top-8 bottom-0 bg-[var(--color-brand-500)]/10 blur-3xl rounded-full pointer-events-none"
+            aria-hidden
+          />
+
+          <div className="relative mx-auto max-w-xl rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface-elevated)] shadow-2xl shadow-black/10 overflow-hidden text-left">
+            {/* chat header */}
+            <div className="flex items-center gap-3 px-5 py-3.5 border-b border-[var(--color-border)]">
+              <div className="relative">
+                <span className="flex items-center justify-center w-9 h-9 rounded-full bg-[var(--color-text-primary)]">
+                  <Sparkles className="w-4 h-4 text-[var(--color-accent-400)]" />
+                </span>
+                <span
+                  className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-[var(--color-accent-500)] border-2 border-[var(--color-surface-elevated)]"
+                  aria-hidden
+                />
+              </div>
+              <div className="flex-1">
+                <p className="text-sm font-semibold text-[var(--color-text-primary)] leading-tight">
+                  Trip AI
+                </p>
+                <p className="text-[11px] text-[var(--color-text-tertiary)]">
+                  online · replies instantly
+                </p>
+              </div>
+              <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--color-text-tertiary)] border border-[var(--color-border)] rounded-full px-2.5 py-1">
+                Preview
+              </span>
+            </div>
+
+            {/* messages */}
+            <div className="p-5 space-y-4 bg-[var(--color-surface-muted)]">
+              {/* date divider */}
+              <div className="flex justify-center message-in">
+                <span className="text-[10px] uppercase tracking-widest text-[var(--color-text-tertiary)] bg-[var(--color-surface)] border border-[var(--color-border)] rounded-full px-3 py-1">
+                  Today, 10:42 am
                 </span>
               </div>
 
-              {/* messages */}
-              <div className="p-5 space-y-4 bg-[var(--color-surface-muted)]">
-                {/* date divider */}
-                <div className="flex justify-center message-in">
-                  <span className="text-[10px] uppercase tracking-widest text-[var(--color-text-tertiary)] bg-[var(--color-surface)] border border-[var(--color-border)] rounded-full px-3 py-1">
-                    Today, 10:42 am
-                  </span>
+              {/* user message */}
+              <div className="flex flex-col items-end message-in message-in-1">
+                <div className="max-w-[85%] rounded-2xl rounded-br-md bg-[var(--color-bubble)] text-white text-sm leading-relaxed px-4 py-3">
+                  Bali in May — 6 of us, around ₹60k each. Beaches, temples, one
+                  adventure day. Veg options please
                 </div>
+                <span className="text-[10px] text-[var(--color-text-tertiary)] mt-1">
+                  10:42 am
+                </span>
+              </div>
 
-                {/* user message */}
-                <div className="flex flex-col items-end message-in message-in-1">
-                  <div className="max-w-[85%] rounded-2xl rounded-br-md bg-[var(--color-bubble)] text-white text-sm leading-relaxed px-4 py-3">
-                    Bali in May — 6 of us, around ₹60k each. Beaches, temples, one adventure
-                    day. Veg options please 
-                  </div>
-                  <span className="text-[10px] text-[var(--color-text-tertiary)] mt-1">
-                    10:42 am
-                  </span>
-                </div>
+              {/* AI message group */}
+              <div className="flex gap-2.5 message-in message-in-2">
+                <span className="shrink-0 w-7 h-7 rounded-full bg-[var(--color-text-primary)] flex items-center justify-center mt-1">
+                  <Sparkles className="w-3.5 h-3.5 text-[var(--color-accent-400)]" />
+                </span>
 
-                {/* AI message group */}
-                <div className="flex gap-2.5 message-in message-in-2">
-                  <span className="shrink-0 w-7 h-7 rounded-full bg-[var(--color-text-primary)] flex items-center justify-center mt-1">
-                    <Sparkles className="w-3.5 h-3.5 text-[var(--color-accent-400)]" />
-                  </span>
+                <div className="flex-1 min-w-0 space-y-2">
+                  {/* rich bubble: intro + itinerary card */}
+                  <div className="rounded-2xl rounded-tl-md border border-[var(--color-border)] bg-[var(--color-surface-elevated)] px-4 py-3">
+                    <p className="text-sm text-[var(--color-text-primary)] leading-relaxed mb-3">
+                      Done! Bali works — visa on arrival is free for Indians.
+                      Here&apos;s 6 days under budget:
+                    </p>
 
-                  <div className="flex-1 min-w-0 space-y-2">
-                    {/* rich bubble: intro + itinerary card */}
-                    <div className="rounded-2xl rounded-tl-md border border-[var(--color-border)] bg-[var(--color-surface-elevated)] px-4 py-3">
-                      <p className="text-sm text-[var(--color-text-primary)] leading-relaxed mb-3">
-                        Done! Bali works — visa on arrival is free for Indians.
-                        Here&apos;s 6 days under budget:
-                      </p>
-
-                      <div className="rounded-xl border border-[var(--color-border)] overflow-hidden">
-                        <div className="flex items-center justify-between px-3.5 py-2.5 border-b border-[var(--color-border)] bg-[var(--color-surface)]">
-                          <span className="text-[11px] font-bold uppercase tracking-widest text-[var(--color-brand-600)]">
-                            Bali · 6 days
+                    <div className="rounded-xl border border-[var(--color-border)] overflow-hidden">
+                      <div className="flex items-center justify-between px-3.5 py-2.5 border-b border-[var(--color-border)] bg-[var(--color-surface)]">
+                        <span className="text-[11px] font-bold uppercase tracking-widest text-[var(--color-brand-600)]">
+                          Bali · 6 days
+                        </span>
+                        <span className="text-[11px] tabular-nums font-semibold text-[var(--color-text-primary)]">
+                          ₹58,400
+                          <span className="text-[var(--color-text-tertiary)] font-normal">
+                            /person
                           </span>
-                          <span className="text-[11px] tabular-nums font-semibold text-[var(--color-text-primary)]">
-                            ₹58,400
-                            <span className="text-[var(--color-text-tertiary)] font-normal">
-                              /person
+                        </span>
+                      </div>
+
+                      <div className="divide-y divide-[var(--color-border)] bg-[var(--color-surface)]">
+                        {[
+                          {
+                            day: "Day 1",
+                            plan: "Uluwatu sunset · Jimbaran dinner (veg menu)",
+                          },
+                          {
+                            day: "Day 2",
+                            plan: "Nusa Penida · Kelingking Beach · snorkelling",
+                          },
+                          {
+                            day: "Day 3",
+                            plan: "Ubud · Tegallalang terraces · Monkey Forest",
+                          },
+                        ].map((item) => (
+                          <div
+                            key={item.day}
+                            className="flex items-center gap-3 px-3.5 py-2.5"
+                          >
+                            <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--color-brand-600)] whitespace-nowrap">
+                              {item.day}
                             </span>
+                            <span className="text-[13px] text-[var(--color-text-secondary)] truncate">
+                              {item.plan}
+                            </span>
+                            <Check className="w-3.5 h-3.5 text-[var(--color-accent-500)] ml-auto shrink-0" />
+                          </div>
+                        ))}
+                      </div>
+
+                      <div className="flex flex-wrap gap-2 px-3.5 py-2.5 border-t border-[var(--color-border)] bg-[var(--color-surface)]">
+                        {[
+                          "🛂 VoA · free",
+                          "🥦 14 veg spots",
+                          "✈️ 6 direct flights",
+                        ].map((chip) => (
+                          <span
+                            key={chip}
+                            className="text-[10px] font-medium text-[var(--color-text-secondary)] border border-[var(--color-border)] rounded-full px-2 py-0.5"
+                          >
+                            {chip}
                           </span>
-                        </div>
-
-                        <div className="divide-y divide-[var(--color-border)] bg-[var(--color-surface)]">
-                          {[
-                            {
-                              day: "Day 1",
-                              plan: "Uluwatu sunset · Jimbaran dinner (veg menu)",
-                            },
-                            {
-                              day: "Day 2",
-                              plan: "Nusa Penida · Kelingking Beach · snorkelling",
-                            },
-                            {
-                              day: "Day 3",
-                              plan: "Ubud · Tegallalang terraces · Monkey Forest",
-                            },
-                          ].map((item) => (
-                            <div
-                              key={item.day}
-                              className="flex items-center gap-3 px-3.5 py-2.5"
-                            >
-                              <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--color-brand-600)] whitespace-nowrap">
-                                {item.day}
-                              </span>
-                              <span className="text-[13px] text-[var(--color-text-secondary)] truncate">
-                                {item.plan}
-                              </span>
-                              <Check className="w-3.5 h-3.5 text-[var(--color-accent-500)] ml-auto shrink-0" />
-                            </div>
-                          ))}
-                        </div>
-
-                        <div className="flex flex-wrap gap-2 px-3.5 py-2.5 border-t border-[var(--color-border)] bg-[var(--color-surface)]">
-                          {[
-                            "🛂 VoA · free",
-                            "🥦 14 veg spots",
-                            "✈️ 6 direct flights",
-                          ].map((chip) => (
-                            <span
-                              key={chip}
-                              className="text-[10px] font-medium text-[var(--color-text-secondary)] border border-[var(--color-border)] rounded-full px-2 py-0.5"
-                            >
-                              {chip}
-                            </span>
-                          ))}
-                        </div>
+                        ))}
                       </div>
                     </div>
+                  </div>
 
-                    {/* grouped follow-up (no avatar = same sender) */}
-                    <div className="rounded-2xl rounded-tl-md border border-[var(--color-border)] bg-[var(--color-surface-elevated)] px-4 py-3 message-in message-in-3">
-                      <p className="text-sm text-[var(--color-text-primary)]">
-                        Swap Day 3 for a waterfall trek, or make it cheaper?
-                      </p>
-                    </div>
+                  {/* grouped follow-up (no avatar = same sender) */}
+                  <div className="rounded-2xl rounded-tl-md border border-[var(--color-border)] bg-[var(--color-surface-elevated)] px-4 py-3 message-in message-in-3">
+                    <p className="text-sm text-[var(--color-text-primary)]">
+                      Swap Day 3 for a waterfall trek, or make it cheaper?
+                    </p>
+                  </div>
 
-                    {/* quick replies */}
-                    <div className="flex flex-wrap gap-2 pt-1 message-in message-in-3">
-                      {["Keep it", "Swap Day 3", "Make it cheaper"].map((q) => (
-                        <span
-                          key={q}
-                          className="text-xs font-medium text-[var(--color-brand-600)] border border-[var(--color-brand-500)]/40 rounded-full px-3 py-1.5 bg-[var(--color-surface-elevated)] cursor-default hover:bg-[var(--color-brand-50)] transition-colors"
-                        >
-                          {q}
-                        </span>
-                      ))}
-                    </div>
+                  {/* quick replies */}
+                  <div className="flex flex-wrap gap-2 pt-1 message-in message-in-3">
+                    {["Keep it", "Swap Day 3", "Make it cheaper"].map((q) => (
+                      <span
+                        key={q}
+                        className="text-xs font-medium text-[var(--color-brand-600)] border border-[var(--color-brand-500)]/40 rounded-full px-3 py-1.5 bg-[var(--color-surface-elevated)] cursor-default hover:bg-[var(--color-brand-50)] transition-colors"
+                      >
+                        {q}
+                      </span>
+                    ))}
                   </div>
                 </div>
               </div>
-
-              {/* composer */}
-              <div className="flex items-center gap-2.5 px-4 py-3 border-t border-[var(--color-border)] bg-[var(--color-surface-elevated)]">
-                <div className="flex-1 text-sm text-[var(--color-text-tertiary)] px-4 py-2.5 rounded-full border border-[var(--color-border)] bg-[var(--color-surface)]">
-                  Ask for changes…
-                </div>
-                <span className="flex items-center justify-center w-9 h-9 rounded-full bg-[var(--color-brand-600)] text-white shrink-0">
-                  <Send className="w-4 h-4" />
-                </span>
-              </div>
             </div>
 
-            {/* floating cards */}
-            <div className="hidden lg:block absolute -left-16 top-28 animate-float rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-elevated)] px-4 py-3 shadow-lg shadow-black/5">
-              <p className="text-xs text-[var(--color-text-tertiary)] mb-1.5">
-                Group poll
-              </p>
-              <p className="text-sm font-semibold text-[var(--color-text-primary)] tabular-nums mb-1.5">
-                4 of 6 confirmed
-              </p>
-              <div className="w-28 h-1 rounded-full bg-[var(--color-border)] overflow-hidden">
-                <div className="h-full w-2/3 rounded-full bg-[var(--color-brand-500)]" />
+            {/* composer */}
+            <div className="flex items-center gap-2.5 px-4 py-3 border-t border-[var(--color-border)] bg-[var(--color-surface-elevated)]">
+              <div className="flex-1 text-sm text-[var(--color-text-tertiary)] px-4 py-2.5 rounded-full border border-[var(--color-border)] bg-[var(--color-surface)]">
+                Ask for changes…
               </div>
+              <span className="flex items-center justify-center w-9 h-9 rounded-full bg-[var(--color-brand-600)] text-white shrink-0">
+                <Send className="w-4 h-4" />
+              </span>
             </div>
-            <div className="hidden lg:block absolute -right-12 bottom-24 animate-float-delayed rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-elevated)] px-4 py-3 shadow-lg shadow-black/5">
-              <p className="text-xs text-[var(--color-text-tertiary)] mb-0.5">Budget check</p>
-              <p className="text-sm font-semibold text-[var(--color-accent-600)] tabular-nums">Under ₹60k ✓</p>
-              <p className="text-[11px] text-[var(--color-text-tertiary)] tabular-nums mt-0.5">₹1,600 left for shopping</p>
+          </div>
+
+          {/* floating cards */}
+          <div className="hidden lg:block absolute -left-16 top-28 animate-float rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-elevated)] px-4 py-3 shadow-lg shadow-black/5">
+            <p className="text-xs text-[var(--color-text-tertiary)] mb-1.5">
+              Group poll
+            </p>
+            <p className="text-sm font-semibold text-[var(--color-text-primary)] tabular-nums mb-1.5">
+              4 of 6 confirmed
+            </p>
+            <div className="w-28 h-1 rounded-full bg-[var(--color-border)] overflow-hidden">
+              <div className="h-full w-2/3 rounded-full bg-[var(--color-brand-500)]" />
             </div>
+          </div>
+          <div className="hidden lg:block absolute -right-12 bottom-24 animate-float-delayed rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-elevated)] px-4 py-3 shadow-lg shadow-black/5">
+            <p className="text-xs text-[var(--color-text-tertiary)] mb-0.5">
+              Budget check
+            </p>
+            <p className="text-sm font-semibold text-[var(--color-accent-600)] tabular-nums">
+              Under ₹60k ✓
+            </p>
+            <p className="text-[11px] text-[var(--color-text-tertiary)] tabular-nums mt-0.5">
+              ₹1,600 left for shopping
+            </p>
           </div>
         </div>
       </section>
@@ -761,8 +764,8 @@ export default function LandingPage() {
                 </span>
               </div>
               <p className="text-[var(--color-text-tertiary)] text-sm leading-relaxed max-w-sm">
-                From &quot;where should we go?&quot; to &quot;when do we leave?&quot; — AI trip
-                planning built for Indian travellers.
+                From &quot;where should we go?&quot; to &quot;when do we
+                leave?&quot; — AI trip planning built for Indian travellers.
               </p>
             </div>
 

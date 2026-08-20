@@ -39,6 +39,12 @@ type RegisterResponse = {
 type RefreshResponse = {
   data: {
     accessToken: string;
+    user: {
+      id: string;
+      email: string;
+      firstName: string;
+      lastName: string;
+    };
   };
 };
 
@@ -53,9 +59,6 @@ type User = {
   updatedAt: Date;
 };
 
-type UsersResponse = {
-  data: User[];
-};
 
 const baseQuery = fetchBaseQuery({
   baseUrl: process.env.NEXT_PUBLIC_API_URL,

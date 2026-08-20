@@ -150,3 +150,30 @@ body {
 .message-in-1 { animation-delay: 0.15s; }
 .message-in-2 { animation-delay: 0.45s; }
 .message-in-3 { animation-delay: 0.8s; }
+
+/* Dot-matrix India: dots background masked by the silhouette */
+.india-dots {
+  background-image: radial-gradient(circle, var(--color-brand-500) 1.1px, transparent 1.1px);
+  background-size: 8px 8px;
+  -webkit-mask-image: url("/india-outline.svg");
+  mask-image: url("/india-outline.svg");
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+}
+
+/* Crisp border layer from the stroke-only file */
+.india-border {
+  background: var(--color-brand-500);
+  -webkit-mask-image: url("/india-outline-stroke.svg");
+  mask-image: url("/india-outline-stroke.svg");
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+}
