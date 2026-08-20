@@ -17,6 +17,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import FeatureCard from "@/components/ui/featureCard";
 import Button from "@/components/ui/button";
 import IndiaMap from "@/components/ui/india-map";
+import { Barcode } from "@/components/ui/barcode";
 
 const destinations = [
   "Bali",
@@ -110,37 +111,6 @@ function Eyebrow({ children }: { children: React.ReactNode }) {
       {children}
       <span className="w-8 h-px bg-[var(--color-accent-500)]" aria-hidden />
     </p>
-  );
-}
-
-/* Fake barcode for boarding-pass steps */
-function Barcode() {
-  const bars = [2, 1, 3, 1, 2, 2, 1, 3, 1, 1, 2, 3, 1, 2];
-  let x = 0;
-  const rects = bars.map((w, i) => {
-    const r = { x, w: w * 2, key: i };
-    x += w * 2 + 3;
-    return r;
-  });
-  return (
-    <svg
-      width="90"
-      height="24"
-      viewBox="0 0 90 24"
-      aria-hidden
-      className="opacity-60 text-[var(--color-text-primary)]"
-    >
-      {rects.map((r) => (
-        <rect
-          key={r.key}
-          x={r.x}
-          y="0"
-          width={r.w}
-          height="24"
-          fill="currentColor"
-        />
-      ))}
-    </svg>
   );
 }
 
@@ -695,57 +665,80 @@ export default function LandingPage() {
 
       {/* ───────────────────────── CTA (darkened) ───────────────────────── */}
       <section className="py-32 px-6">
-        <div className="max-w-5xl mx-auto relative overflow-hidden rounded-3xl bg-[var(--color-cta)] px-8 py-24 text-center">
-          <svg
-            className="absolute inset-0 w-full h-full"
-            viewBox="0 0 1200 600"
-            preserveAspectRatio="none"
-            aria-hidden
-          >
-            {[...Array(7)].map((_, i) => (
-              <circle
-                key={i}
-                cx="600"
-                cy="620"
-                r={120 + i * 110}
-                fill="none"
-                stroke="white"
-                strokeOpacity={0.08 - i * 0.01}
-              />
-            ))}
-            <path
-              d="M -40 420 C 300 300, 600 460, 900 240 S 1300 160, 1360 120"
-              fill="none"
-              stroke="var(--color-accent-400)"
-              strokeOpacity="0.4"
-              strokeWidth="1.5"
-              strokeDasharray="5 9"
-              className="animate-dash"
-            />
-          </svg>
-          <div
-            className="absolute inset-0 bg-noise opacity-[0.06] pointer-events-none"
-            aria-hidden
-          />
-
-          <div className="relative z-10">
-            <h2 className="text-4xl md:text-6xl font-bold tracking-[-0.03em] text-balance text-white mb-6">
-              <span className="font-serif italic font-normal">Chalo,</span> plan
-              karte hain.
-            </h2>
-            <p className="text-white/75 text-lg leading-relaxed mb-10 max-w-xl mx-auto">
-              Join the early access and take your first AI-planned trip this
-              season. Free while we&apos;re in beta.
-            </p>
-            <Button
-              href="/auth/signup"
-              className="!bg-white !text-[#0e7490] hover:!bg-[var(--color-brand-50)] !shadow-none !text-base !px-8 !rounded-full"
-            >
-              Get early access <ArrowRight className="w-4 h-4" />
-            </Button>
-            <p className="mt-6 text-white/55 text-sm">
-              No credit card required
-            </p>
+        <div className="max-w-5xl mx-auto relative rounded-[2rem] bg-[var(--color-cta)] overflow-hidden shadow-2xl shadow-black/20">
+          {/* punch notches on the perforation */}
+          <span className="hidden md:block absolute -top-3 right-[228px] w-6 h-6 rounded-full bg-[var(--color-surface)]" aria-hidden />
+          <span className="hidden md:block absolute -bottom-3 right-[228px] w-6 h-6 rounded-full bg-[var(--color-surface)]" aria-hidden />
+      
+          <div className="grid md:grid-cols-[1fr_240px]">
+            {/* ── main: the ask ── */}
+            <div className="relative px-8 py-16 md:px-14 md:py-20 text-center md:text-left">
+              <div className="absolute inset-0 bg-noise opacity-[0.06] pointer-events-none" aria-hidden />
+      
+              <div className="relative z-10">
+                <h2 className="text-4xl md:text-5xl font-bold tracking-[-0.03em] text-balance text-white mb-5">
+                  <span className="font-serif italic font-normal">Chalo,</span> plan karte hain.
+                </h2>
+                <p className="text-white/75 text-lg leading-relaxed mb-9 max-w-md mx-auto md:mx-0">
+                  Join the early access and take your first AI-planned trip this
+                  season. Free while we're in beta.
+                </p>
+                <Button
+                  href="/auth/signup"
+                  className="!bg-white !text-[#0e7490] hover:!bg-[var(--color-brand-50)] !shadow-none !text-base !px-8 !rounded-full"
+                >
+                  Get early access <ArrowRight className="w-4 h-4" />
+                </Button>
+                <p className="mt-5 text-white/55 text-sm">No credit card required</p>
+              </div>
+            </div>
+      
+            {/* ── perforation ── */}
+            <div className="hidden md:block absolute inset-y-0 right-[240px] border-l-2 border-dashed border-white/20" aria-hidden />
+      
+            {/* ── stub: the ticket details ── */}
+            <div className="hidden md:flex flex-col justify-between gap-8 p-7">
+              <div className="flex items-center justify-between text-[10px] font-semibold uppercase tracking-[0.22em] text-white/50">
+                <span>Boarding pass</span>
+                <span>AI-TP · 2026</span>
+              </div>
+      
+              <div>
+                <p className="text-white font-bold tracking-tight text-xl mb-1 flex items-center">
+                  <span>HOME</span>
+                   <ArrowRight size={16} /> 
+                  <span>ANYWHERE</span>
+                </p>
+                <p className="text-white/60 text-xs">Passenger: you · Seat 1A · Gate: now</p>
+              </div>
+      
+              {/* one small looping plane — the only motion, kept quiet */}
+              <svg viewBox="0 0 200 60" fill="none" className="w-full" aria-hidden>
+                <path
+                  id="stub-loop"
+                  d="M4 46 C 60 10, 140 10, 196 46"
+                  stroke="white"
+                  strokeOpacity="0.35"
+                  strokeWidth="1.5"
+                  strokeDasharray="4 8"
+                  strokeLinecap="round"
+                />
+                <g>
+                  <path d="M0 -5 L13 0 L0 5 L4 0 Z" fill="var(--color-accent-400)" />
+                  <animateMotion dur="5s" repeatCount="indefinite" rotate="auto">
+                    <mpath href="#stub-loop" />
+                  </animateMotion>
+                </g>
+              </svg>
+      
+              <div className="flex items-end justify-between gap-4">
+                <Barcode className="text-white/70" />
+                <div className="text-right">
+                  <p className="text-[10px] uppercase tracking-[0.2em] text-white/50">Fare</p>
+                  <p className="text-white font-bold text-sm flex items-center">FREE · BETA</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
