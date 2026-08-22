@@ -21,6 +21,7 @@ model User {
   role String @default("user")
   status String   @default("active")
   sessions Session[]
+  trips Trip[]
   
   createdAt DateTime @default(now()) @db.Timestamptz
   updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz
@@ -34,4 +35,55 @@ model Session {
   createdAt DateTime @default(now()) @db.Timestamptz
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+enum TravelStyle {
+  ADVENTURE
+  RELAXED
+  CULTURAL
+  LUXURY
+  BUDGET
+} 
+
+enum Interest {
+  FOOD
+  HISTORY
+  NATURE
+  BEACHES
+  MOUNTAINS
+  NIGHTLIFE
+  SHOPPING
+  CULTURE
+  WILDLIFE
+  PHOTOGRAPHY
+  TREKKING
+  WELLNESS
+  SPIRITUAL
+  ADVENTURE_SPORTS
+}
+
+enum TripStatus {
+  DRAFT
+  PLANNED
+  COMPLETED
+  CANCELLED
+}
+
+model Trip {
+  id String @default(uuid()) @id @db.Uuid
+  userId String @db.Uuid
+  destination String @db.VarChar(150)
+  travellers Int 
+  startDate DateTime @db.Timestamptz
+  endDate DateTime @db.Timestamptz
+  budget Int?
+  travelStyle TravelStyle?
+  interests Interest[]
+  status TripStatus @default(DRAFT)
+
+  createdAt DateTime @default(now()) @db.Timestamptz
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
