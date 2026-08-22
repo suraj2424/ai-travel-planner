@@ -67,6 +67,7 @@ class TripRepository {
       }
     })
   }
+
 }
 
 export default TripRepository;
