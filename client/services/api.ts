@@ -32,6 +32,7 @@ type RegisterRequest = {
   password: string;
 };
 
+
 type RegisterResponse = {
   message: string;
 };
@@ -48,15 +49,34 @@ type RefreshResponse = {
   };
 };
 
-type User = {
+export type Trip = {
   id: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  role: string;
+  destination: string;
+  travellers: number;
+  startDate: string;
+  endDate: string;
+  budget: number | null;
+  travelStyle: string | null;
+  interests: string[];
   status: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type CreateTripRequest = {
+  destination: string;
+  travellers: number;
+  startDate: string;
+  endDate: string;
+  budget?: number;
+  travelStyle?: string;
+  interests?: string[];
+};
+
+export type TripResponse = { data: Trip };
+export type TripsResponse = {
+  data: Trip[];
+  meta: { page: number; limit: number; total: number };
 };
 
 
@@ -113,6 +133,7 @@ const baseQueryWithReauth: BaseQueryFn<
 export const api = createApi({
   reducerPath: "api",
   baseQuery: baseQueryWithReauth,
+  tagTypes: ["Trips"],
   endpoints: (builder) => ({
     login: builder.mutation<LoginResponse, LoginRequest>({
       query: (credentials) => ({
@@ -128,14 +149,74 @@ export const api = createApi({
         body: userData,
       }),
     }),
+    updateUser: builder.mutation<RegisterResponse, Partial<RegisterRequest>>({
+      query: (userData) => ({
+        url: "/users",
+        method: "POST",
+        body: userData,
+      }),
+    }),
     refresh: builder.mutation<RefreshResponse, void>({
       query: () => ({
         url: "/auth/refresh",
         method: "POST",
       }),
     }),
+    getTrips: builder.query<TripsResponse, { page: number; limit: number }>({
+      query: ({ page, limit }) => ({
+        url: `/trips?page=${page}&limit=${limit}`,
+        method: "GET",
+      }),
+      providesTags: ["Trips"],
+    }),
+
+    getTrip: builder.query<TripResponse, string>({
+      query: (id) => ({
+        url: `/trips/${id}`,
+        method: "GET",
+      }),
+      providesTags: ["Trips"],
+    }),
+
+    createTrip: builder.mutation<TripResponse, CreateTripRequest>({
+      query: (trip) => ({
+        url: "/trips",
+        method: "POST",
+        body: trip,
+      }),
+      invalidatesTags: ["Trips"],
+    }),
+
+    updateTrip: builder.mutation<
+      TripResponse,
+      { id: string; data: Partial<CreateTripRequest> }
+    >({
+      query: ({ id, data }) => ({
+        url: `/trips/${id}`,
+        method: "PATCH",
+        body: data,
+      }),
+      invalidatesTags: ["Trips"],
+    }),
+
+    deleteTrip: builder.mutation<void, string>({
+      query: (id) => ({
+        url: `/trips/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Trips"],
+    }),
   }),
 });
 
-export const { useLoginMutation, useRegisterMutation, useRefreshMutation } =
-  api;
+export const {
+  useLoginMutation,
+  useRegisterMutation,
+  useUpdateUserMutation,
+  useRefreshMutation,
+  useGetTripsQuery,
+  useGetTripQuery,
+  useCreateTripMutation,
+  useUpdateTripMutation,
+  useDeleteTripMutation,
+} = api;
