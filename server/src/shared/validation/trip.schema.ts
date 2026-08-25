@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { Interest, TravelStyle } from "../../../generated/prisma/enums";
 
-const createTripSchema = z.object({
+const baseTripSchema = z.object({
   destination: z.string().min(1).max(50),
   travellers: z.coerce.number().int().min(1).max(50),
   startDate: z.coerce.date(),
@@ -9,12 +9,21 @@ const createTripSchema = z.object({
   budget: z.coerce.number().int().positive().max(10000000).optional(),
   travelStyle: z.enum(TravelStyle).optional(),
   interests: z.array(z.enum(Interest)).max(10).optional(),
-}).refine((data) => data.endDate >= data.startDate, {
-  error: "End date must be after or equal to start date",
-  path: ["endDate"]
 });
 
-export const updateTripSchema = createTripSchema.partial().refine(
+export const createTripSchema = baseTripSchema.refine(
+  (data) => data.endDate >= data.startDate,
+  {
+    error: "End date must be after or equal to start date",
+    path: ["endDate"],
+  }
+);
+
+export default createTripSchema;
+
+const updateTripBaseSchema = baseTripSchema.partial();
+
+export const updateTripSchema = updateTripBaseSchema.refine(
   (data) => {
     if (data.startDate && data.endDate) {
       return data.endDate >= data.startDate;
@@ -22,7 +31,7 @@ export const updateTripSchema = createTripSchema.partial().refine(
     return true;
   },
   {
-    message: "End date must be after or equal to start date",
+    error: "End date must be after or equal to start date",
     path: ["endDate"],
   }
 );

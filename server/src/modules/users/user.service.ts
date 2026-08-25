@@ -1,21 +1,16 @@
-import type { Prisma } from "../../../generated/prisma/client";
+import BadRequestError from "../../shared/errors/BadRequestError";
 import NotFoundError from "../../shared/errors/NotFoundError";
+import UnauthorizedError from "../../shared/errors/UnauthorizedError";
 import { hashPassword } from "../../shared/security/password";
+import type { CreateUserInput, UpdateUserInput } from "../../shared/validation/user.schema";
 import UserRepository from "./user.repository";
-
-interface CreateUserRequestBody {
-  email: string;
-  firstName: string;
-  lastName: string;
-  password: string;
-}
 
 class UserService {
   constructor(
     private userRepository: UserRepository
   ) { }
 
-  async createUser(data: CreateUserRequestBody) {
+  async createUser(data: CreateUserInput) {
     const pswd_hash = await hashPassword(data.password);
     const result = {
       email: data.email,
@@ -24,6 +19,20 @@ class UserService {
       passwordHash: pswd_hash
     }
     return this.userRepository.create(result);
+  }
+
+  async updateUser(userId: string, data: UpdateUserInput) {
+    const user = await this.userRepository.findById(userId);
+    if (!user) {
+      throw new UnauthorizedError("ACCESS_DENIED", "No session found!")
+    }
+    const result = await this.userRepository.update(userId, data);
+
+    if (!result) {
+      throw new BadRequestError("INVALID_INFORMATION", "Missing required fields");
+    }
+
+    return result;
   }
 
   async findById(id: string) {

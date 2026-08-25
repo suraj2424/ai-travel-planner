@@ -22,72 +22,29 @@ class TripService {
     return result;
   }
 
-  async getTripById(tripId: string, userId: string) {
+  private async getOwnedTrip(tripId: string, userId: string) {
     const trip = await this.tripRepository.findById(tripId);
-    if (!trip) {
-      throw new NotFoundError(
-        "TRIP_NOT_FOUND",
-        "No trip found"
-      );
-    }
-    
-    if (trip.userId !== userId) {
-      throw new NotFoundError(
-        "TRIP_NOT_FOUND",
-        "No trip found"
-      );
-    }
+    if (!trip) throw new NotFoundError("TRIP_NOT_FOUND", "No trip found");
+    if (trip.userId !== userId) throw new NotFoundError("TRIP_NOT_FOUND", "No trip found");
+    return trip;
+  }
 
+  async getTripById(tripId: string, userId: string) {
+    const trip = await this.getOwnedTrip(tripId, userId);
     return trip;
   }
 
   async updateTrip(tripId: string, userId: string, data: UpdateTripInput) {
-    const trip = await this.tripRepository.findById(tripId);
-    if (!trip) {
-      throw new NotFoundError(
-        "TRIP_NOT_FOUND",
-        "No trip found"
-      );
-    }
+    const trip = await this.getOwnedTrip(tripId, userId);
+    const result = await this.tripRepository.update(trip.id, data);
     
-    if (trip.userId !== userId) {
-      throw new NotFoundError(
-        "TRIP_NOT_FOUND",
-        "No trip found"
-      );
-    }
-    const result = await this.tripRepository.update(tripId, data);
-    if (!result) {
-      throw new NotFoundError(
-        "TRIP_NOT_FOUND",
-        "No trip found"
-      );
-    }
     return result;
   }
 
   async deleteTrip(tripId: string, userId: string) {
-    const trip = await this.tripRepository.findById(tripId);
-    if (!trip) {
-      throw new NotFoundError(
-        "TRIP_NOT_FOUND",
-        "No trip found"
-      );
-    }
+    const trip = await this.getOwnedTrip(tripId, userId);
+    const result = await this.tripRepository.delete(trip.id);
     
-    if (trip.userId !== userId) {
-      throw new NotFoundError(
-        "TRIP_NOT_FOUND",
-        "No trip found"
-      );
-    }
-    const result = await this.tripRepository.delete(tripId);
-    if (!result) {
-      throw new NotFoundError(
-        "TRIP_NOT_FOUND",
-        "No trip found"
-      );
-    }
     return result;
   }
 }

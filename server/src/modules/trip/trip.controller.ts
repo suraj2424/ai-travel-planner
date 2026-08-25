@@ -8,11 +8,16 @@ class TripController {
     private tripService: TripService,
   ) { }
 
-  createTrip = async (req: Request, res: Response) => {
-    if (!req.user || !req.user.id) {
-      throw new UnauthorizedError("ACCESS_DENIED", "No Session Found");
+  private requireUserId(req: Request): string {
+    if (!req.user?.id) {
+      throw new UnauthorizedError("ACCESS_DENIED", "No session found");
     }
-    const result = await this.tripService.createTrip(req.user?.id, req.body);
+    return req.user.id;
+  }
+
+  createTrip = async (req: Request, res: Response) => {
+    const userId = this.requireUserId(req);
+    const result = await this.tripService.createTrip(userId, req.body);
     
     return res.status(201).json({
       result
@@ -21,10 +26,8 @@ class TripController {
 
   listTrips = async (req: Request, res: Response) => {
     const { page, limit } = req.query;
-    if (!req.user || !req.user.id) {
-      throw new UnauthorizedError("ACCESS_DENIED", "No Session Found");
-    }
-    const { trips, total } = await this.tripService.listTrips(req.user.id, Number(page), Number(limit));
+    const userId = this.requireUserId(req);
+    const { trips, total } = await this.tripService.listTrips(userId, Number(page), Number(limit));
     return res.status(200).json({
       data: trips,
       meta: {
@@ -42,17 +45,16 @@ class TripController {
     }
     const tripId = req.params.tripId;
     if (!tripId || Array.isArray(tripId)) {
-      throw new BadRequestError("INVALID_INFORMATION", "Invalid trip ID");
+      throw new BadRequestError("MISSING_REQUIRED_FIELDS", "Missing Information");
     }
     const result = await this.tripService.updateTrip(tripId, req.user.id, data);
     return res.status(200).json({ result });
   }
 
+  
+
   findById = async (req: Request, res: Response) => { 
     const tripId = req.params.tripId;
-    if (!tripId || Array.isArray(tripId)) {
-      throw new BadRequestError("INVALID_INFORMATION", "Invalid trip ID");
-    }
     if (!req.user || !req.user.id) {
       throw new UnauthorizedError("ACCESS_DENIED", "No Session Found");
     }
@@ -61,6 +63,19 @@ class TripController {
     return res.status(200).json({
       result
     });
+  }
+
+  deleteTrip = async (req: Request, res: Response) => {
+    const tripId = req.params.tripId;
+    if (!tripId || Array.isArray(tripId)) {
+      throw new BadRequestError("MISSING_REQUIRED_FIELDS", "Invalid trip ID");
+    }
+    if (!req.user || !req.user.id) {
+      throw new UnauthorizedError("ACCESS_DENIED", "No Session Found");
+    }
+    const result = await this.tripService.deleteTrip(tripId, req.user.id);
+
+    return res.status(204);
   }
 }
 

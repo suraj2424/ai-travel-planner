@@ -3,7 +3,8 @@ import type { Request, Response } from "express";
 import testSchema from "../shared/validation/test.schema";
 import validate from "../shared/middleware/validate";
 import userRouter from "../modules/users/user.routes"
-import authRouter from "../modules/auth/auth.routes"
+import authRouter from "../modules/auth/auth.routes";
+import tripRouter from "../modules/trip/trip.routes";
 
 const router = Router();
 
@@ -26,6 +27,7 @@ router.post(
 
 router.use(userRouter);
 router.use(authRouter);
+router.use(tripRouter);
 
 
 
