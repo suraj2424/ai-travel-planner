@@ -28,6 +28,7 @@ export default function RootLayout({
       lang="en"
       className={`${inter.variable} ${playfair.variable}`}
       suppressHydrationWarning
+      data-scroll-behavior="smooth"
     >
       <body className="antialiased">
         <script

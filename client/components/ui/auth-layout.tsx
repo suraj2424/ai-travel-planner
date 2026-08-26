@@ -54,7 +54,7 @@ export default function AuthLayout({
         </h2>
 
         {/* boarding stub */}
-        <div className="relative z-10 rounded-xl border border-white/15 bg-white/5 backdrop-blur-sm px-6 py-5 max-w-md">
+        {/*<div className="relative z-10 rounded-xl border border-white/15 bg-white/5 backdrop-blur-sm px-6 py-5 max-w-md">
           <div className="flex justify-between text-[10px] font-semibold uppercase tracking-[0.22em] text-white/50 mb-4">
             <span>Boarding pass</span>
             <span>AI-TP · 2026</span>
@@ -77,7 +77,7 @@ export default function AuthLayout({
             <Barcode className="text-white/60" />
             <span className="font-serif italic text-sm text-white/60">{stubNote}</span>
           </div>
-        </div>
+        </div>*/}
       </aside>
 
       {/* ── Form panel ── */}
@@ -102,7 +102,7 @@ export default function AuthLayout({
         </div>
 
         <p className="text-center text-xs text-[var(--color-text-tertiary)]">
-          Free during beta · No credit card required · Made in India 🇮
+          Free during beta · No credit card required · Made in India
         </p>
       </main>
     </div>

@@ -177,3 +177,21 @@ body {
   -webkit-mask-size: contain;
   mask-size: contain;
 }
+
+/* range rings breathing */
+@keyframes ring-breathe {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+.ring-breathe {
+  animation: ring-breathe 6s ease-in-out infinite;
+}
+
+/* quiet cities twinkle */
+@keyframes city-twinkle {
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 0.9; }
+}
+.city-twinkle {
+  animation: city-twinkle 4s ease-in-out infinite;
+}

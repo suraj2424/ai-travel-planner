@@ -19,7 +19,7 @@ export default function SignupPage() {
       }
       stubNote="boarding soon"
     >
-      <div className="mb-10">
+      <div className="mb-4">
         <h1 className="text-3xl font-bold tracking-tight text-[var(--color-text-primary)] mb-2">
           Create your account
         </h1>
