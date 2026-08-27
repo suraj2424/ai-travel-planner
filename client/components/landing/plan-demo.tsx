@@ -5,7 +5,7 @@ import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { ArrowRight, Check } from "lucide-react";
 import Button from "@/components/ui/button";
 
-const EASE = [0.22, 1, 0.36, 1];
+const EASE = [0.22, 1, 0.36, 1] as const;
 
 const EXAMPLES = [
   {
@@ -55,14 +55,13 @@ const EXAMPLES = [
 ];
 
 function useCountUp(target: number, duration = 600) {
-  const [value, setValue] = useState(target);
-  const current = useRef(target);
   const reduce = useReducedMotion();
+  const [value, setValue] = useState(() => (reduce ? target : 0));
+  const current = useRef(value);
 
   useEffect(() => {
     if (reduce) {
       current.current = target;
-      setValue(target);
       return;
     }
     const from = current.current;
