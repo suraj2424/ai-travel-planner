@@ -7,6 +7,8 @@ const Button = ({
   href,
   type = "button",
   disabled = false,
+  onClick,
+  ...props
 }: {
   children: React.ReactNode;
   variant?: "primary" | "secondary" | "outline";
@@ -14,6 +16,7 @@ const Button = ({
   href?: string;
   type?: "button" | "submit";
   disabled?: boolean;
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
 }) => {
   const base =
     "inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full font-medium tracking-tight transition-all duration-200 active:scale-[0.98]";
@@ -32,7 +35,7 @@ const Button = ({
       {children}
     </Link>
   ) : (
-    <button type={type} className={cls} disabled={disabled}>
+    <button type={type} className={cls} disabled={disabled} onClick={onClick} {...props}>
       {children}
     </button>
   );

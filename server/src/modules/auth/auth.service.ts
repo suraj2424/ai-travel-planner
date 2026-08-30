@@ -20,6 +20,19 @@ class AuthService {
     private authRepository: AuthRepository,
   ) {}
 
+  private async getUserById(userId: string) {
+    const user = await this.userRepository.findById(userId);
+    if (!user) {
+      throw new UnauthorizedError("USER_NOT_FOUND", "User not found");
+    }
+    return {
+      id: user.id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email
+    };
+  }
+
   async loginUser(data: UserLoginRequestBody) {
     const fetchedUser = await this.userRepository.findUserByEmail(data.email);
     if (!fetchedUser) {
@@ -116,9 +129,11 @@ class AuthService {
     } else {
       
       const new_token = await generateAccessToken(currentSession.userId);
+      const user = await this.getUserById(currentSession.userId);
       return {
         accessToken: new_token,
         refreshToken: refresh_token,
+        user,
       };
     }
   }

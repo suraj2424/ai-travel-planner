@@ -42,7 +42,7 @@ export default function LoginForm() {
         })
       );
 
-      router.push("/");
+      router.push("/trips");
     } catch (err) {
       console.error(err);
       setFormError("Invalid email or password. Please try again.");

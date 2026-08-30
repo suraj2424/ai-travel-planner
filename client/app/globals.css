@@ -8,6 +8,7 @@
 
 /* ─── Light Theme ─── */
 :root {
+  color-scheme: light;
   --color-brand-50: #f0fdfa;
   --color-brand-100: #ccfbf1;
   --color-brand-500: #14b8a6;
@@ -36,6 +37,7 @@
 
 /* ─── Dark Theme ─── */
 .dark {
+  color-scheme: dark;
   --color-brand-50: #042f2e;
   --color-brand-100: #134e4a;
   --color-brand-500: #2dd4bf;
@@ -78,6 +80,31 @@ body {
 ::selection {
   background: var(--color-brand-500);
   color: white;
+}
+
+/* ─── Form Input Enhancements ─── */
+/* Hide native browser spin buttons for type="number" */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+/* Date picker indicator dark mode styling */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  opacity: 0.7;
+  padding: 2px;
+  transition: opacity 0.2s ease;
+}
+input[type="date"]::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+}
+.dark input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(0.85);
 }
 
 /* ─── Subtle grid ─── */

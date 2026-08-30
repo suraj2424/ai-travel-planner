@@ -14,7 +14,7 @@ export default function ProtectedRoute({
 }: ProtectedRouteProps) {
   const router = useRouter();
 
-  const { initialized, isAuthenticated } = useSelector(
+  const { initialized, isAuthenticated, user } = useSelector(
     (state: RootState) => state.auth,
   );
 
