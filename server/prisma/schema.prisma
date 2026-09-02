@@ -22,7 +22,7 @@ model User {
   status String   @default("active")
   sessions Session[]
   trips Trip[]
-  
+
   createdAt DateTime @default(now()) @db.Timestamptz
   updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz
 }
@@ -43,7 +43,7 @@ enum TravelStyle {
   CULTURAL
   LUXURY
   BUDGET
-} 
+}
 
 enum Interest {
   FOOD
@@ -73,17 +73,79 @@ model Trip {
   id String @default(uuid()) @id @db.Uuid
   userId String @db.Uuid
   destination String @db.VarChar(150)
-  travellers Int 
+  travellers Int
   startDate DateTime @db.Timestamptz
   endDate DateTime @db.Timestamptz
   budget Int?
   travelStyle TravelStyle?
   interests Interest[]
   status TripStatus @default(DRAFT)
+  itinerary Itinerary?
 
   createdAt DateTime @default(now()) @db.Timestamptz
   updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
+}
+
+enum ItineraryStatus {
+  GENERATING
+  DRAFT
+  FINALIZED
+}
+
+enum ActivityCategory {
+  SIGHTSEEING
+  MEAL
+  TRANSPORT
+  ACCOMMODATION
+  EXPERIENCE
+}
+
+model Itinerary {
+  id     String          @id @default(uuid()) @db.Uuid
+  tripId String          @unique @db.Uuid
+  status ItineraryStatus @default(GENERATING)
+
+  trip Trip @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  days ItineraryDay[]
+
+  createdAt DateTime @default(now()) @db.Timestamptz
+  updatedAt DateTime @updatedAt @db.Timestamptz
+}
+
+model ItineraryDay {
+  id          String   @id @default(uuid()) @db.Uuid
+  itineraryId String   @db.Uuid
+  dayNumber   Int
+  date        DateTime @db.Timestamptz
+
+  itinerary  Itinerary  @relation(fields: [itineraryId], references: [id], onDelete: Cascade)
+  activities Activity[]
+
+  createdAt DateTime @default(now()) @db.Timestamptz
+  updatedAt DateTime @updatedAt @db.Timestamptz
+
+  @@unique([itineraryId, dayNumber])
+  @@index([itineraryId])
+}
+
+model Activity {
+  id             String           @id @default(uuid()) @db.Uuid
+  itineraryDayId String           @db.Uuid
+  title          String
+  description    String
+  category       ActivityCategory
+  time           DateTime         @db.Timestamptz
+  travelMode       String?
+  travelMinutes    Int?
+  travelDistanceKm Float?
+
+  itineraryDay ItineraryDay @relation(fields: [itineraryDayId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @db.Timestamptz
+  updatedAt DateTime @updatedAt @db.Timestamptz
+
+  @@index([itineraryDayId])
 }

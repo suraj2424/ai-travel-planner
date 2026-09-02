@@ -15,14 +15,16 @@
     "dev": "bun --watch src/server.ts"
   },
   "dependencies": {
+    "@ai-sdk/groq": "^4.0.35",
     "@prisma/adapter-pg": "^7.9.1",
     "@prisma/client": "^7.9.1",
     "@types/express": "^5.0.6",
+    "ai": "^7.0.87",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",
     "express": "^5.2.1",
     "jose": "^6.2.9",
-    "prisma": "^8.0.0-rc.10",
+    "prisma": "7.9.1",
     "zod": "^4.4.3"
   }
 }

@@ -1,13 +1,12 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Plane, Compass, Plus, LogOut, ChevronDown } from "lucide-react";
 import Dropdown, { DropdownItem, DropdownDivider } from "./dropdown";
 import { ThemeToggle } from "../theme-toggle";
 
 interface MobileHeaderProps {
-  activeView: "trips" | "create";
-  onSelectView: (view: "trips" | "create") => void;
   totalTrips?: number;
   user?: {
     id?: string;
@@ -19,12 +18,16 @@ interface MobileHeaderProps {
 }
 
 export default function MobileHeader({
-  activeView,
-  onSelectView,
   totalTrips = 0,
   user,
   onLogout,
 }: MobileHeaderProps) {
+  const pathname = usePathname();
+
+  const isTripsActive = pathname === "/trips";
+  const isCreateActive = pathname === "/trips/new";
+  const isDetailActive =
+    !!pathname?.startsWith("/trips/") && pathname !== "/trips/new";
   const getInitials = () => {
     if (!user) return "U";
     if (user.firstName && user.lastName) {
@@ -115,11 +118,10 @@ export default function MobileHeader({
 
         {/* Mobile View Navigation Tabs */}
         <div className="flex items-center gap-2 pb-3 border-t border-[var(--color-border)]/50 pt-2.5">
-          <button
-            type="button"
-            onClick={() => onSelectView("trips")}
+          <Link
+            href="/trips"
             className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
-              activeView === "trips"
+              isTripsActive || isDetailActive
                 ? "bg-[var(--color-brand-50)] text-[var(--color-brand-700)] dark:bg-[var(--color-brand-900)]/40 dark:text-[var(--color-brand-300)] border border-[var(--color-border)]"
                 : "bg-[var(--color-surface-muted)] text-[var(--color-text-secondary)]"
             }`}
@@ -131,20 +133,19 @@ export default function MobileHeader({
                 {totalTrips}
               </span>
             )}
-          </button>
+          </Link>
 
-          <button
-            type="button"
-            onClick={() => onSelectView("create")}
+          <Link
+            href="/trips/new"
             className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
-              activeView === "create"
+              isCreateActive
                 ? "bg-[var(--color-brand-50)] text-[var(--color-brand-700)] dark:bg-[var(--color-brand-900)]/40 dark:text-[var(--color-brand-300)] border border-[var(--color-border)]"
                 : "bg-[var(--color-surface-muted)] text-[var(--color-text-secondary)]"
             }`}
           >
             <Plus className="w-3.5 h-3.5" />
             <span>Plan Trip</span>
-          </button>
+          </Link>
         </div>
       </div>
     </header>

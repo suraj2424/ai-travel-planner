@@ -7,6 +7,8 @@ const envSchema = z.object({
   JWT_SECRET: z.string().min(32),
   JWT_ACCESS_TOKEN_EXPIRES_IN: z.string(),
   REFRESH_TOKEN_EXPIRES_IN: z.coerce.number().int(),
+  GROQ_API_KEY: z.string(),
+  GEOAPIFY_API_KEY: z.string(),
 });
 
 
@@ -24,5 +26,7 @@ export const config = {
   database_url: parsedEnv.data.DATABASE_URL,
   jwt_secret: parsedEnv.data.JWT_SECRET,
   jwt_access_token_expires_in: parsedEnv.data.JWT_ACCESS_TOKEN_EXPIRES_IN,
-  refresh_token_expires_in: parsedEnv.data.REFRESH_TOKEN_EXPIRES_IN
+  refresh_token_expires_in: parsedEnv.data.REFRESH_TOKEN_EXPIRES_IN,
+  groq_api_key: parsedEnv.data.GROQ_API_KEY,
+  geoapify_api_key: parsedEnv.data.GEOAPIFY_API_KEY
 }

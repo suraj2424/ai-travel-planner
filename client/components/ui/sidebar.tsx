@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+
 import {
   Plane,
   Compass,
@@ -15,8 +17,6 @@ import Dropdown, { DropdownItem, DropdownDivider } from "./dropdown";
 import { ThemeToggle } from "../theme-toggle";
 
 interface SidebarProps {
-  activeView: "trips" | "create";
-  onSelectView: (view: "trips" | "create") => void;
   totalTrips?: number;
   user?: {
     id?: string;
@@ -49,13 +49,20 @@ function TooltipWrapper({
 }
 
 export default function Sidebar({
-  activeView,
-  onSelectView,
   totalTrips = 0,
   user,
   onLogout,
 }: SidebarProps) {
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const pathname = usePathname();
+  const router = useRouter();
+
+  const isTripsActive = pathname === "/trips";
+  const isCreateActive = pathname === "/trips/new";
+  const isDetailActive =
+    !!pathname?.startsWith("/trips/") && pathname !== "/trips/new";
+
+  const goToCreate = () => router.push("/trips/new");
 
   // Compute user initials cleanly
   const getInitials = () => {
@@ -145,11 +152,10 @@ export default function Sidebar({
             text={`My Trips ${totalTrips > 0 ? `(${totalTrips})` : ""}`}
             show={isCollapsed}
           >
-            <button
-              type="button"
-              onClick={() => onSelectView("trips")}
+            <Link
+              href="/trips"
               className={`w-full flex items-center h-10 px-2.5 rounded-xl text-sm font-semibold transition-all duration-200 cursor-pointer ${
-                activeView === "trips"
+                isTripsActive || isDetailActive
                   ? "bg-[var(--color-brand-50)] dark:bg-[var(--color-brand-950)]/50 text-[var(--color-brand-700)] dark:text-[var(--color-brand-300)] border border-[var(--color-brand-200)] dark:border-[var(--color-brand-800)]/60 shadow-xs"
                   : "text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-muted)] hover:text-[var(--color-text-primary)] border border-transparent"
               } ${isCollapsed ? "justify-center" : "justify-between"}`}
@@ -157,7 +163,7 @@ export default function Sidebar({
               <div className="flex items-center min-w-0">
                 <Compass
                   className={`w-4.5 h-4.5 shrink-0 ${
-                    activeView === "trips"
+                    isTripsActive || isDetailActive
                       ? "text-[var(--color-brand-600)] dark:text-[var(--color-brand-400)]"
                       : ""
                   }`}
@@ -172,7 +178,7 @@ export default function Sidebar({
               {totalTrips > 0 && !isCollapsed && (
                 <span
                   className={`rounded-full text-xs font-semibold px-2 py-0.5 shrink-0 transition-opacity duration-200 ${
-                    activeView === "trips"
+                    isTripsActive || isDetailActive
                       ? "bg-[var(--color-brand-200)]/50 dark:bg-[var(--color-brand-900)]/80 text-[var(--color-brand-800)] dark:text-[var(--color-brand-200)]"
                       : "bg-[var(--color-surface-muted)] text-[var(--color-text-tertiary)] border border-[var(--color-border)]"
                   }`}
@@ -180,16 +186,15 @@ export default function Sidebar({
                   {totalTrips}
                 </span>
               )}
-            </button>
+            </Link>
           </TooltipWrapper>
 
           {/* Plan Trip Tab */}
           <TooltipWrapper text="Plan New Trip" show={isCollapsed}>
-            <button
-              type="button"
-              onClick={() => onSelectView("create")}
+            <Link
+              href="/trips/new"
               className={`w-full flex items-center h-10 px-2.5 rounded-xl text-sm font-semibold transition-all duration-200 cursor-pointer ${
-                activeView === "create"
+                isCreateActive
                   ? "bg-[var(--color-brand-50)] dark:bg-[var(--color-brand-950)]/50 text-[var(--color-brand-700)] dark:text-[var(--color-brand-300)] border border-[var(--color-brand-200)] dark:border-[var(--color-brand-800)]/60 shadow-xs"
                   : "text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-muted)] hover:text-[var(--color-text-primary)] border border-transparent"
               } ${isCollapsed ? "justify-center" : "justify-between"}`}
@@ -197,7 +202,7 @@ export default function Sidebar({
               <div className="flex items-center min-w-0">
                 <Plus
                   className={`w-4.5 h-4.5 shrink-0 ${
-                    activeView === "create"
+                    isCreateActive
                       ? "text-[var(--color-brand-600)] dark:text-[var(--color-brand-400)]"
                       : ""
                   }`}
@@ -208,7 +213,7 @@ export default function Sidebar({
                   </span>
                 )}
               </div>
-            </button>
+            </Link>
           </TooltipWrapper>
         </div>
       </div>
@@ -259,7 +264,7 @@ export default function Sidebar({
                     )}
                   </div>
 
-                  <DropdownItem onClick={() => onSelectView("create")}>
+                  <DropdownItem onClick={goToCreate}>
                     <Plus className="w-4 h-4 text-[var(--color-brand-600)] dark:text-[var(--color-brand-400)]" />
                     <span>Plan New Trip</span>
                   </DropdownItem>
@@ -326,7 +331,7 @@ export default function Sidebar({
                   </div>
                 </div>
 
-                <DropdownItem onClick={() => onSelectView("create")}>
+                <DropdownItem onClick={goToCreate}>
                   <Plus className="w-4 h-4 text-[var(--color-brand-600)] dark:text-[var(--color-brand-400)]" />
                   <span>Plan New Trip</span>
                 </DropdownItem>

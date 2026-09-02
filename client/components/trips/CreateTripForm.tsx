@@ -31,7 +31,7 @@ import Input from "@/components/ui/input";
 import Select from "@/components/ui/select";
 import DateInput from "@/components/ui/date-input";
 import Button from "@/components/ui/button";
-import { useCreateTripMutation } from "@/services/api";
+import { useCreateTripMutation, Trip } from "@/services/api";
 
 const QUICK_DESTINATIONS = ["Goa, India", "Manali, Himachal", "Vietnam", "Tokyo, Japan", "Bali, Indonesia"];
 
@@ -61,7 +61,7 @@ const INTERESTS_WITH_ICONS = [
 ];
 
 interface CreateTripFormProps {
-  onSuccess?: () => void;
+  onSuccess?: (trip?: Trip) => void;
 }
 
 export default function CreateTripForm({ onSuccess }: CreateTripFormProps) {
@@ -122,7 +122,7 @@ export default function CreateTripForm({ onSuccess }: CreateTripFormProps) {
     };
 
     try {
-      await createTrip(payload).unwrap();
+      const result = await createTrip(payload).unwrap();
 
       // Reset form on success
       setDestination("");
@@ -133,7 +133,11 @@ export default function CreateTripForm({ onSuccess }: CreateTripFormProps) {
       setTravelStyle("");
       setInterests([]);
 
-      onSuccess?.();
+      if (result?.data) {
+        onSuccess?.(result.data);
+      } else {
+        onSuccess?.();
+      }
     } catch (err: unknown) {
       console.error("Failed to create trip:", err);
       setSubmitError("Failed to create trip. Please try again.");

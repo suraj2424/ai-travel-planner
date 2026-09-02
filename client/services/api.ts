@@ -79,6 +79,33 @@ export type TripsResponse = {
   meta: { page: number; limit: number; total: number };
 };
 
+export type Activity = {
+  id: string;
+  title: string;
+  description: string;
+  category: string;
+  time: string;
+  travelMode: string | null;
+  travelMinutes: number | null;   
+  travelDistanceKm: number | null;
+};
+
+export type ItineraryDay = {
+  id: string;
+  dayNumber: number;
+  date: string;
+  activities: Activity[];
+};
+
+export type Itinerary = {
+  id: string;
+  tripId: string;
+  status: string;
+  days: ItineraryDay[];
+};
+
+// NOTE: data can be null (trip exists, no itinerary yet)
+export type ItineraryResponse = { data: Itinerary | null };
 
 const baseQuery = fetchBaseQuery({
   baseUrl: process.env.NEXT_PUBLIC_API_URL,
@@ -133,7 +160,7 @@ const baseQueryWithReauth: BaseQueryFn<
 export const api = createApi({
   reducerPath: "api",
   baseQuery: baseQueryWithReauth,
-  tagTypes: ["Trips"],
+  tagTypes: ["Trips","Itinerary"],
   endpoints: (builder) => ({
     login: builder.mutation<LoginResponse, LoginRequest>({
       query: (credentials) => ({
@@ -206,6 +233,22 @@ export const api = createApi({
       }),
       invalidatesTags: ["Trips"],
     }),
+
+    getItinerary: builder.query<ItineraryResponse, string>({
+      query: (tripId) => ({
+        url: `/itineraries/${tripId}`,
+        method: "GET",
+      }),
+      providesTags: (result, error, tripId) => [{ type: "Itinerary", id: tripId }],
+    }),
+    
+    generateItinerary: builder.mutation<ItineraryResponse, string>({
+      query: (tripId) => ({
+        url: `/itineraries/generate/${tripId}`,
+        method: "POST",
+      }),
+      invalidatesTags: (result, error, tripId) => [{ type: "Itinerary", id: tripId }],
+    }),
   }),
 });
 
@@ -219,4 +262,6 @@ export const {
   useCreateTripMutation,
   useUpdateTripMutation,
   useDeleteTripMutation,
+  useGetItineraryQuery,
+  useGenerateItineraryMutation
 } = api;

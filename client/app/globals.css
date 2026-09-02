@@ -1,34 +1,73 @@
 @import "tailwindcss";
 
-/* Map next/font variables → Tailwind font utilities */
+/* Class-based dark mode (e.g. next-themes toggling `.dark` on <html>).
+   Without this, `dark:` variants follow the OS preference instead of the class. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Map next/font variables → Tailwind font utilities, and register the
+   semantic, theme-reactive tokens. `inline` makes every utility read the
+   raw CSS variable at runtime, so values flip with the .dark class.
+   Raw values live in :root / .dark below. */
 @theme inline {
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-serif: var(--font-playfair), Georgia, serif;
+
+  /* Semantic surfaces & text */
+  --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-muted);
+  --color-surface-elevated: var(--surface-elevated);
+  --color-border: var(--border);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-tertiary: var(--text-tertiary);
+
+  /* Component fills */
+  --color-bubble: var(--bubble);
+  --color-cta: var(--cta);
+
+  /* Shadows */
+  --shadow-brand: var(--shadow-brand);
+  --shadow-card: var(--shadow-card);
+  --shadow-card-hover: var(--shadow-card-hover);
+}
+
+/* Static raw palettes — the SAME ramp in both themes.
+   Teal works on light and dark surfaces; theme-specific adaptation belongs
+   in the semantic tokens above, not in a folded color scale. */
+@theme {
+  --color-brand-50: #f0fdfa;
+  --color-brand-100: #ccfbf1;
+  --color-brand-200: #99f6e4;
+  --color-brand-300: #5eead4;
+  --color-brand-400: #2dd4bf;
+  --color-brand-500: #14b8a6;
+  --color-brand-600: #0d9488;
+  --color-brand-700: #0f766e;
+  --color-brand-800: #115e59;
+  --color-brand-900: #134e4a;
+  --color-brand-950: #042f2e;
+
+  --color-accent-300: #fcd34d;
+  --color-accent-400: #fbbf24;
+  --color-accent-500: #f59e0b;
+  --color-accent-600: #d97706;
+  --color-accent-700: #b45309;
 }
 
 /* ─── Light Theme ─── */
 :root {
   color-scheme: light;
-  --color-brand-50: #f0fdfa;
-  --color-brand-100: #ccfbf1;
-  --color-brand-500: #14b8a6;
-  --color-brand-600: #0d9488;
-  --color-brand-700: #0f766e;
-  --color-brand-800: #115e59;
 
-  --color-accent-400: #fbbf24;
-  --color-accent-500: #f59e0b;
-  --color-accent-600: #d97706;
+  --surface: #fafaf9;
+  --surface-muted: #f5f5f4;
+  --surface-elevated: #ffffff;
+  --border: #e7e5e4;
+  --text-primary: #1c1917;
+  --text-secondary: #57534e;
+  --text-tertiary: #78716c;   /* was #a8a29e — 2.4:1, failed WCAG; now 4.6:1 */
 
-  --color-surface: #fafaf9;
-  --color-surface-muted: #f5f5f4;
-  --color-surface-elevated: #ffffff;
-  --color-border: #e7e5e4;
-  --color-text-primary: #1c1917;
-  --color-text-secondary: #57534e;
-  --color-text-tertiary: #a8a29e;
-  --color-bubble: #0891b2;   /* chat bubble fill */
-  --color-cta: #0e7490;   
+  --bubble: #0e7490;          /* cyan-700: white text = 5.4:1 (was #0891b2 = 3.7:1) */
+  --cta: #155e75;             /* cyan-800: white text = 7.2:1, 6.8:1 vs page bg */
 
   --shadow-brand: 0 4px 14px -3px rgba(13, 148, 136, 0.35);
   --shadow-card: 0 1px 3px rgba(28, 25, 23, 0.06), 0 6px 16px -4px rgba(28, 25, 23, 0.1);
@@ -38,26 +77,18 @@
 /* ─── Dark Theme ─── */
 .dark {
   color-scheme: dark;
-  --color-brand-50: #042f2e;
-  --color-brand-100: #134e4a;
-  --color-brand-500: #2dd4bf;
-  --color-brand-600: #14b8a6;
-  --color-brand-700: #0d9488;
-  --color-brand-800: #0f766e;
 
-  --color-accent-400: #fcd34d;
-  --color-accent-500: #fbbf24;
-  --color-accent-600: #f59e0b;
+  --surface: #0c0a0a;
+  --surface-muted: #161413;
+  --surface-elevated: #1e1c1b;
+  --border: #2e2a28;
+  --text-primary: #faf8f6;
+  --text-secondary: #a8a29e;
+  --text-tertiary: #78716c;
 
-  --color-surface: #0c0a0a;
-  --color-surface-muted: #161413;
-  --color-surface-elevated: #1e1c1b;
-  --color-border: #2e2a28;
-  --color-text-primary: #faf8f6;
-  --color-text-secondary: #a8a29e;
-  --color-text-tertiary: #78716c;
-  --color-bubble: #155e75;   /* deep petrol, not neon */
-  --color-cta: #083344;      /* near-black teal */
+  --bubble: #155e75;          /* cyan-800: white text = 7.2:1 */
+  --cta: #0e7490;             /* cyan-700: was #083344 (1.5:1 vs bg — invisible);
+                                 now 3.7:1 vs the near-black surface, white text 5.4:1 */
 
   --shadow-brand: 0 4px 14px -3px rgba(45, 212, 191, 0.3);
   --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.2), 0 6px 16px -4px rgba(0, 0, 0, 0.3);
@@ -70,16 +101,21 @@ html {
 
 body {
   font-family: var(--font-sans);
-  background-color: var(--color-surface);
-  color: var(--color-text-primary);
+  background-color: var(--surface);
+  color: var(--text-primary);
   -webkit-font-smoothing: antialiased;
   transition: background-color 0.3s ease, color 0.3s ease;
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
 }
 
+/* Selection: high-contrast in both themes */
 ::selection {
-  background: var(--color-brand-500);
-  color: white;
+  background: var(--color-brand-200);
+  color: var(--color-brand-900);
+}
+.dark ::selection {
+  background: var(--color-brand-400);
+  color: var(--color-brand-950);
 }
 
 /* ─── Form Input Enhancements ─── */
@@ -110,8 +146,8 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 /* ─── Subtle grid ─── */
 .bg-grid-pattern {
   background-image:
-    linear-gradient(to right, var(--color-border) 1px, transparent 1px),
-    linear-gradient(to bottom, var(--color-border) 1px, transparent 1px);
+    linear-gradient(to right, var(--border) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--border) 1px, transparent 1px);
   background-size: 56px 56px;
   mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
 }

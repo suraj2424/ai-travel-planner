@@ -62,7 +62,10 @@ export default function TripCard({ trip, onDelete, isDeleting }: TripCardProps) 
           </div>
 
           <button
-            onClick={() => onDelete(trip.id)}
+            onClick={(e) => {
+              e.stopPropagation();
+              onDelete(trip.id);
+            }}
             disabled={isDeleting}
             className="flex-shrink-0 p-2 text-[var(--color-text-tertiary)] hover:text-red-600 dark:hover:text-red-400 hover:bg-red-500/10 rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
             aria-label={`Delete trip to ${trip.destination}`}

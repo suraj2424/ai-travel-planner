@@ -1,10 +1,9 @@
 import { Router } from "express";
 import type { Request, Response } from "express";
-import testSchema from "../shared/validation/test.schema";
-import validate from "../shared/middleware/validate";
 import userRouter from "../modules/users/user.routes"
 import authRouter from "../modules/auth/auth.routes";
 import tripRouter from "../modules/trip/trip.routes";
+import itineraryRouter from "../modules/itinerary/itinerary.routes"
 
 const router = Router();
 
@@ -14,20 +13,10 @@ router.get("/health", (req: Request, res: Response) => {
     })
 });
 
-router.post(
-  "/test-validation",
-  validate(testSchema),
-  (req: Request, res: Response) => {
-    return res.json({
-      message: "Validation passed",
-      data: req.body,
-    });
-  }
-);
-
 router.use(userRouter);
 router.use(authRouter);
-router.use(tripRouter);
+router.use("/trips", tripRouter);
+router.use("/itineraries", itineraryRouter);
 
 
 

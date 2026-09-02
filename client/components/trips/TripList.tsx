@@ -4,20 +4,20 @@ import { useGetTripsQuery, useDeleteTripMutation, Trip } from "@/services/api";
 import TripCard from "./TripCard";
 import EmptyState from "./EmptyState";
 import LoadingState from "./LoadingState";
+import { useRouter } from "next/navigation";
 
 interface TripListProps {
   searchQuery?: string;
   styleFilter?: string;
-  onNavigateToCreate?: () => void;
 }
 
 export default function TripList({
   searchQuery = "",
   styleFilter = "",
-  onNavigateToCreate,
 }: TripListProps) {
   const { data, isLoading, error } = useGetTripsQuery({ page: 1, limit: 50 });
   const [deleteTrip, { isLoading: isDeleting }] = useDeleteTripMutation();
+  const router = useRouter();
 
   if (isLoading) return <LoadingState count={6} />;
 
@@ -51,7 +51,7 @@ export default function TripList({
         title="No trips yet"
         description="Start planning your next adventure by creating your first trip."
         actionLabel="Create Trip"
-        onAction={onNavigateToCreate}
+        onAction={() => router.push("/trips/new")}
       />
     );
   }
@@ -74,12 +74,25 @@ export default function TripList({
       aria-label="Your trips"
     >
       {filteredTrips.map((trip) => (
-        <TripCard
+        <div
           key={trip.id}
-          trip={trip}
-          onDelete={deleteTrip}
-          isDeleting={isDeleting}
-        />
+          role="link"
+          tabIndex={0}
+          onClick={() => router.push(`/trips/${trip.id}`)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              router.push(`/trips/${trip.id}`);
+            }
+          }}
+          className="cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-500)]/40 rounded-2xl"
+        >
+          <TripCard
+            trip={trip}
+            onDelete={(id) => deleteTrip(id)}
+            isDeleting={isDeleting}
+          />
+        </div>
       ))}
     </div>
   );

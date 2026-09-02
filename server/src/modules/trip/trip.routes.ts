@@ -8,14 +8,19 @@ const router = Router();
 
 router.use(authenticateAccessToken);
 
-router.post("/trips", validate(createTripSchema), tripController.createTrip);
+// GET /api/v1/trips
+router.get("/", validate(listTripsSchema, "query"), tripController.listTrips);
 
-router.patch("/trips/:id", validate(tripIdSchema, "params"), validate(updateTripSchema), tripController.updateTrip);
+// POST /api/v1/trips
+router.post("/", validate(createTripSchema), tripController.createTrip);
 
-router.get("/trips/:id", validate(tripIdSchema, "params"), tripController.findById);
+// GET /api/v1/trips/:id
+router.get("/:id", validate(tripIdSchema, "params"), tripController.findById);
 
-router.delete("/trips/:id", validate(tripIdSchema, "params"), tripController.deleteTrip);
+// PATCH /api/v1/trips/:id
+router.patch("/:id", validate(tripIdSchema, "params"), validate(updateTripSchema), tripController.updateTrip);
 
-router.get("/trips", validate(listTripsSchema, "query"), tripController.listTrips);
+// DELETE /api/v1/trips/:id
+router.delete("/:id", validate(tripIdSchema, "params"), tripController.deleteTrip);
 
 export default router;
