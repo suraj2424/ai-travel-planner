@@ -1,117 +1,167 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import type { ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import {
   useGetItineraryQuery,
   useGetTripQuery,
   useGenerateItineraryMutation,
   useDeleteTripMutation,
-  Activity,
-  ItineraryDay,
-  Trip,
 } from "@/services/api";
+import type { Activity, ItineraryDay, Trip } from "@/services/api";
 import {
+  AlertTriangle,
   ArrowLeft,
+  Bed,
+  Bus,
   Calendar,
   Car,
+  ChevronDown,
+  ChevronUp,
   Clock,
   Compass,
+  Film,
   Footprints,
+  Gem,
+  HeartPulse,
+  IndianRupee,
+  Landmark,
   Loader2,
   MapPin,
+  Moon,
+  Mountain,
   Pencil,
   RefreshCw,
+  ShoppingBag,
   Sparkles,
+  Sun,
   Tag,
   Trash2,
   Users,
-  Mountain,
-  Sun,
-  Landmark,
-  Gem,
+  Utensils,
   Wallet,
-  IndianRupee,
-  AlertTriangle,
-  ChevronDown,
-  ChevronUp,
 } from "lucide-react";
-import { ReactNode } from "react";
 
-// Simple icon component for category icons
-function Icon({ name, className }: { name: string; className?: string }) {
-  const icons: Record<string, ReactNode> = {
-    utensils: <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Z"/><line x1="12" x2="12" y1="15" y2="12"/></svg>,
-    landmark: <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18.7 21a1 1 0 0 1-.3-.7V13.3a1 1 0 0 0-1.7-.7L8.7 17.7a1 1 0 0 1-1.4 0L4.3 12.6a1 1 0 0 0-1.7.7V20.3a1 1 0 0 1-.3.7C4 21.8 5.5 23 7 23h14c1.5 0 3-1.2 3-2.7Z"/><path d="M12 2v20"/></svg>,
-    bed: <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M2 4v16"/><path d="M2 8h18a2 2 0 0 1 2 2v10"/><path d="M2 17h20"/><path d="M6 8V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v4"/><path d="M10 4v4"/><path d="M14 4v4"/></svg>,
-    bus: <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M8 6a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v10"/><path d="M4 16v5"/><path d="M20 16v5"/><path d="M8 16h8"/><circle cx="8" cy="21" r="2"/><circle cx="16" cy="21" r="2"/></svg>,
-    "shopping-bag": <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><line x1="3" x2="21" y1="6" y2="6"/><path d="M16 10a4 4 0 0 1 0 8"/></svg>,
-    film: <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="2" width="20" height="20" rx="2.18"/><line x1="7" x2="17" y1="2" y2="2"/><line x1="7" x2="17" y1="22" y2="22"/><line x1="2" x2="2" y1="7" y2="17"/><line x1="22" x2="22" y1="7" y2="17"/><line x1="2" x2="22" y1="12" y2="12"/><line x1="12" x2="12" y1="2" y2="22"/></svg>,
-    mountain: <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M8 3.4a.9.9 0 0 0-.6.2L2 8.6a.9.9 0 0 0 0 1.4l2.5 2.6a.9.9 0 0 1 0 1.4L2 17a.9.9 0 0 0 .6 1.4h18.8a.9.9 0 0 0 .6-1.4l-4-4a.9.9 0 0 1 0-1.4l4-4a.9.9 0 0 0-.6-1.4H8.2Z"/><path d="M12 8V3"/></svg>,
-    "heart-pulse": <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 2 12a7 7 0 0 0 7 7c2.7 0 5.1-1.2 6.8-3.2"/><path d="M19 12H9"/><path d="M15 19v-7"/><path d="M11 12v7"/></svg>,
-    "moon-star": <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/><path d="M12 1v4"/><path d="M12 19v4"/><path d="M4.93 4.93l2.83 2.83"/><path d="M16.24 16.24l2.83 2.83"/><path d="M1 12h4"/><path d="M19 12h4"/><path d="M4.93 19.07l2.83-2.83"/><path d="M16.24 7.76l2.83-2.83"/></svg>,
-  };
-  return icons[name] || <Tag className={className} />;
+function cn(...classes: Array<string | false | null | undefined>) {
+  return classes.filter(Boolean).join(" ");
 }
 
-const STYLE_CONFIG: Record<
-  string,
-  { label: string; icon: ReactNode; chip: string; color: string }
-> = {
+type StyleConfig = {
+  label: string;
+  icon: ReactNode;
+  chip: string;
+  color: string;
+};
+
+type CategoryConfig = {
+  label: string;
+  icon: ReactNode;
+  className: string;
+};
+
+const STYLE_CONFIG: Record<string, StyleConfig> = {
   ADVENTURE: {
     label: "Adventure",
-    icon: <Mountain className="w-3.5 h-3.5" />,
-    chip: "bg-[var(--color-brand-50)] text-[var(--color-brand-700)] dark:bg-[var(--color-brand-900)]/40 dark:text-[var(--color-brand-300)]",
+    icon: <Mountain className="h-3.5 w-3.5" />,
+    chip: "bg-red-500/10 text-red-600 dark:text-red-400",
     color: "text-red-500",
   },
   RELAXED: {
     label: "Relaxed",
-    icon: <Sun className="w-3.5 h-3.5" />,
-    chip: "bg-[var(--color-accent-500)]/10 text-[var(--color-accent-600)] dark:text-[var(--color-accent-400)]",
+    icon: <Sun className="h-3.5 w-3.5" />,
+    chip: "bg-amber-500/10 text-amber-600 dark:text-amber-400",
     color: "text-amber-500",
   },
   CULTURAL: {
     label: "Cultural",
-    icon: <Landmark className="w-3.5 h-3.5" />,
-    chip: "bg-[var(--color-brand-50)] text-[var(--color-brand-700)] dark:bg-[var(--color-brand-900)]/40 dark:text-[var(--color-brand-300)]",
+    icon: <Landmark className="h-3.5 w-3.5" />,
+    chip: "bg-blue-500/10 text-blue-600 dark:text-blue-400",
     color: "text-blue-500",
   },
   LUXURY: {
     label: "Luxury",
-    icon: <Gem className="w-3.5 h-3.5" />,
-    chip: "bg-[var(--color-accent-500)]/10 text-[var(--color-accent-600)] dark:text-[var(--color-accent-400)]",
+    icon: <Gem className="h-3.5 w-3.5" />,
+    chip: "bg-purple-500/10 text-purple-600 dark:text-purple-400",
     color: "text-purple-500",
   },
   BUDGET: {
     label: "Budget",
-    icon: <Wallet className="w-3.5 h-3.5" />,
-    chip: "bg-[var(--color-brand-50)] text-[var(--color-brand-700)] dark:bg-[var(--color-brand-900)]/40 dark:text-[var(--color-brand-300)]",
+    icon: <Wallet className="h-3.5 w-3.5" />,
+    chip: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400",
     color: "text-emerald-500",
   },
 };
 
-const CATEGORY_CONFIG: Record<string, { color: string; icon: ReactNode; label: string }> = {
-  FOOD: { color: "text-orange-500 bg-orange-500/10", icon: <Icon name="utensils" className="w-3 h-3" />, label: "Food" },
-  SIGHTSEEING: { color: "text-blue-500 bg-blue-500/10", icon: <Icon name="landmark" className="w-3 h-3" />, label: "Sightseeing" },
-  ACCOMMODATION: { color: "text-purple-500 bg-purple-500/10", icon: <Icon name="bed" className="w-3 h-3" />, label: "Stay" },
-  TRANSPORT: { color: "text-emerald-500 bg-emerald-500/10", icon: <Icon name="bus" className="w-3 h-3" />, label: "Transport" },
-  SHOPPING: { color: "text-pink-500 bg-pink-500/10", icon: <Icon name="shopping-bag" className="w-3 h-3" />, label: "Shopping" },
-  ENTERTAINMENT: { color: "text-yellow-500 bg-yellow-500/10", icon: <Icon name="film" className="w-3 h-3" />, label: "Entertainment" },
-  ADVENTURE: { color: "text-red-500 bg-red-500/10", icon: <Icon name="mountain" className="w-3 h-3" />, label: "Adventure" },
-  WELLNESS: { color: "text-teal-500 bg-teal-500/10", icon: <Icon name="heart-pulse" className="w-3 h-3" />, label: "Wellness" },
-  NIGHTLIFE: { color: "text-indigo-500 bg-indigo-500/10", icon: <Icon name="moon-star" className="w-3 h-3" />, label: "Nightlife" },
-  DEFAULT: { color: "text-[var(--color-brand-500)] bg-[var(--color-brand-500)]/10", icon: <Tag className="w-3 h-3" />, label: "Activity" },
+const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
+  FOOD: {
+    label: "Food",
+    icon: <Utensils className="h-3 w-3" />,
+    className: "bg-orange-500/10 text-orange-600 dark:text-orange-400",
+  },
+  SIGHTSEEING: {
+    label: "Sightseeing",
+    icon: <Landmark className="h-3 w-3" />,
+    className: "bg-blue-500/10 text-blue-600 dark:text-blue-400",
+  },
+  ACCOMMODATION: {
+    label: "Stay",
+    icon: <Bed className="h-3 w-3" />,
+    className: "bg-purple-500/10 text-purple-600 dark:text-purple-400",
+  },
+  TRANSPORT: {
+    label: "Transport",
+    icon: <Bus className="h-3 w-3" />,
+    className: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400",
+  },
+  SHOPPING: {
+    label: "Shopping",
+    icon: <ShoppingBag className="h-3 w-3" />,
+    className: "bg-pink-500/10 text-pink-600 dark:text-pink-400",
+  },
+  ENTERTAINMENT: {
+    label: "Entertainment",
+    icon: <Film className="h-3 w-3" />,
+    className: "bg-yellow-500/10 text-yellow-700 dark:text-yellow-400",
+  },
+  ADVENTURE: {
+    label: "Adventure",
+    icon: <Mountain className="h-3 w-3" />,
+    className: "bg-red-500/10 text-red-600 dark:text-red-400",
+  },
+  WELLNESS: {
+    label: "Wellness",
+    icon: <HeartPulse className="h-3 w-3" />,
+    className: "bg-teal-500/10 text-teal-600 dark:text-teal-400",
+  },
+  NIGHTLIFE: {
+    label: "Nightlife",
+    icon: <Moon className="h-3 w-3" />,
+    className: "bg-indigo-500/10 text-indigo-600 dark:text-indigo-400",
+  },
+  DEFAULT: {
+    label: "Activity",
+    icon: <Tag className="h-3 w-3" />,
+    className:
+      "bg-[var(--color-brand-50)] text-[var(--color-brand-700)] dark:bg-[var(--color-brand-900)] dark:text-[var(--color-brand-300)]",
+  },
 };
 
-function formatTime(iso: string) {
-  return new Date(iso).toLocaleTimeString([], {
+function formatTime(value: string) {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+
+  return date.toLocaleTimeString([], {
     hour: "2-digit",
     minute: "2-digit",
   });
 }
 
-function formatDate(date: string) {
-  return new Date(date).toLocaleDateString(undefined, {
+function formatDate(value: string) {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+
+  return date.toLocaleDateString(undefined, {
     weekday: "long",
     month: "short",
     day: "numeric",
@@ -119,116 +169,170 @@ function formatDate(date: string) {
   });
 }
 
-function formatShortDate(date: string) {
-  return new Date(date).toLocaleDateString(undefined, {
+function formatShortDate(value: string) {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+
+  return date.toLocaleDateString(undefined, {
     month: "short",
     day: "numeric",
     year: "numeric",
   });
 }
 
-function getCategoryConfig(category: string) {
-  return CATEGORY_CONFIG[category.toUpperCase()] || CATEGORY_CONFIG.DEFAULT;
+function getTripDateRange(trip: Trip) {
+  if (!trip.startDate || !trip.endDate) return null;
+
+  const start = formatShortDate(trip.startDate);
+  const end = formatShortDate(trip.endDate);
+
+  if (!start || !end) return null;
+
+  return `${start} – ${end}`;
 }
 
-function LoadingSkeleton() {
+function getCategoryConfig(category?: string): CategoryConfig {
+  if (!category) return CATEGORY_CONFIG.DEFAULT;
+
+  return CATEGORY_CONFIG[category.toUpperCase()] ?? CATEGORY_CONFIG.DEFAULT;
+}
+
+function Chip({
+  icon,
+  className,
+  children,
+}: {
+  icon?: ReactNode;
+  className?: string;
+  children: ReactNode;
+}) {
   return (
-    <div className="space-y-8" aria-busy="true" aria-label="Loading itinerary">
-      <div className="flex items-center justify-between">
-        <div className="space-y-2">
-          <div className="h-9 w-56 bg-[var(--color-border)] rounded-lg animate-pulse" />
-          <div className="h-4 w-36 bg-[var(--color-border)] rounded animate-pulse" />
-        </div>
-        <div className="h-9 w-28 bg-[var(--color-border)] rounded-full animate-pulse" />
-      </div>
+    <span
+      className={cn(
+        "inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium",
+        className
+      )}
+    >
+      {icon}
+      {children}
+    </span>
+  );
+}
 
-      <div className="flex flex-wrap gap-2">
-        {Array.from({ length: 4 }).map((_, i) => (
-          <div key={i} className="h-7 w-20 bg-[var(--color-border)] rounded-full animate-pulse" />
-        ))}
-      </div>
+function TripMetaChips({
+  trip,
+  showAiBadge = false,
+}: {
+  trip: Trip;
+  showAiBadge?: boolean;
+}) {
+  const styleInfo = trip.travelStyle
+    ? STYLE_CONFIG[trip.travelStyle.toUpperCase()]
+    : undefined;
+  const dateRange = getTripDateRange(trip);
 
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        {Array.from({ length: 4 }).map((_, i) => (
-          <div key={i} className="h-20 bg-[var(--color-border)] rounded-2xl animate-pulse" />
-        ))}
-      </div>
+  return (
+    <div className="flex flex-wrap items-center gap-2">
+      {styleInfo && (
+        <Chip icon={styleInfo.icon} className={styleInfo.chip}>
+          {styleInfo.label}
+        </Chip>
+      )}
 
-      <div className="space-y-4">
-        {Array.from({ length: 2 }).map((_, i) => (
-          <div
-            key={i}
-            className="bg-[var(--color-surface-elevated)] border border-[var(--color-border)] rounded-2xl p-5 animate-pulse space-y-4"
-          >
-            <div className="h-6 w-32 bg-[var(--color-border)] rounded" />
-            <div className="space-y-3 pl-[5.25rem]">
-              {Array.from({ length: 2 }).map((_, j) => (
-                <div key={j} className="h-16 bg-[var(--color-border)] rounded-xl" />
-              ))}
-            </div>
-          </div>
-        ))}
-      </div>
+      {typeof trip.travellers === "number" && (
+        <Chip
+          icon={<Users className="h-3.5 w-3.5" />}
+          className="border border-[var(--color-border)] bg-[var(--color-surface-muted)] text-[var(--color-text-secondary)]"
+        >
+          {trip.travellers} traveller{trip.travellers === 1 ? "" : "s"}
+        </Chip>
+      )}
+
+      {typeof trip.budget === "number" && trip.budget > 0 && (
+        <Chip
+          icon={<IndianRupee className="h-3.5 w-3.5" />}
+          className="border border-[var(--color-border)] bg-[var(--color-surface-muted)] text-[var(--color-brand-600)] dark:text-[var(--color-brand-400)]"
+        >
+          {trip.budget.toLocaleString()}
+        </Chip>
+      )}
+
+      {dateRange && (
+        <Chip
+          icon={<Calendar className="h-3.5 w-3.5" />}
+          className="border border-[var(--color-border)] bg-[var(--color-surface-muted)] text-[var(--color-text-secondary)]"
+        >
+          {dateRange}
+        </Chip>
+      )}
+
+      {showAiBadge && (
+        <Chip
+          icon={<Sparkles className="h-3.5 w-3.5" />}
+          className="bg-[var(--color-brand-50)] text-[var(--color-brand-700)] dark:bg-[var(--color-brand-900)] dark:text-[var(--color-brand-300)]"
+        >
+          AI-generated
+        </Chip>
+      )}
     </div>
   );
 }
 
-function DeleteDialog({
-  trip,
-  onConfirm,
-  onCancel,
-  isDeleting,
-}: {
-  trip: Trip;
-  onConfirm: () => void;
-  onCancel: () => void;
-  isDeleting: boolean;
-}) {
+function LoadingSkeleton() {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
-      <div
-        className="absolute inset-0 bg-black/40 backdrop-blur-sm"
-        onClick={onCancel}
-        aria-hidden="true"
-      />
-      <div className="relative bg-[var(--color-surface-elevated)] border border-[var(--color-border)] rounded-2xl p-6 max-w-sm w-full shadow-2xl animate-in zoom-in-95 duration-200">
-        <div className="flex items-center gap-3 mb-4">
-          <div className="w-10 h-10 rounded-xl bg-red-500/10 text-red-500 flex items-center justify-center shrink-0">
-            <AlertTriangle className="w-5 h-5" />
+    <div
+      className="mx-auto w-full max-w-5xl space-y-6"
+      aria-busy="true"
+      aria-label="Loading itinerary"
+    >
+      <div className="h-10 w-44 animate-pulse rounded-xl bg-[var(--color-border)]" />
+
+      <div className="rounded-3xl border border-[var(--color-border)] bg-[var(--color-surface-elevated)] p-6 shadow-sm sm:p-8">
+        <div className="flex flex-col gap-6 xl:flex-row xl:items-start xl:justify-between">
+          <div className="flex-1 space-y-4">
+            <div className="flex items-center gap-4">
+              <div className="h-14 w-14 animate-pulse rounded-3xl bg-[var(--color-border)]" />
+              <div className="space-y-2">
+                <div className="h-3 w-24 animate-pulse rounded bg-[var(--color-border)]" />
+                <div className="h-7 w-56 animate-pulse rounded bg-[var(--color-border)]" />
+                <div className="h-4 w-40 animate-pulse rounded bg-[var(--color-border)]" />
+              </div>
+            </div>
+
+            <div className="flex flex-wrap gap-2">
+              {Array.from({ length: 4 }).map((_, index) => (
+                <div
+                  key={index}
+                  className="h-7 w-24 animate-pulse rounded-full bg-[var(--color-border)]"
+                />
+              ))}
+            </div>
           </div>
-          <div className="min-w-0">
-            <h3 className="font-semibold text-[var(--color-text-primary)]">
-              Delete trip?
-            </h3>
-            <p className="text-xs text-[var(--color-text-tertiary)]">
-              This action cannot be undone
-            </p>
+
+          <div className="flex flex-wrap gap-2">
+            <div className="h-10 w-32 animate-pulse rounded-full bg-[var(--color-border)]" />
+            <div className="h-10 w-28 animate-pulse rounded-full bg-[var(--color-border)]" />
+            <div className="h-10 w-10 animate-pulse rounded-full bg-[var(--color-border)]" />
           </div>
         </div>
-        <p className="text-sm text-[var(--color-text-secondary)] mb-6">
-          Are you sure you want to delete your trip to{" "}
-          <span className="font-semibold text-[var(--color-text-primary)]">
-            {trip.destination}
-          </span>
-          ? All itinerary data will be permanently removed.
-        </p>
-        <div className="flex gap-3 justify-end">
-          <button
-            onClick={onCancel}
-            disabled={isDeleting}
-            className="px-4 py-2 rounded-xl text-sm font-medium border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text-primary)] hover:bg-[var(--color-surface-muted)] transition-colors disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-500)]"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={onConfirm}
-            disabled={isDeleting}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium bg-red-500 text-white hover:bg-red-600 transition-colors disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2"
-          >
-            {isDeleting && <Loader2 className="w-4 h-4 animate-spin" />}
-            {isDeleting ? "Deleting…" : "Delete trip"}
-          </button>
-        </div>
+      </div>
+
+      <div className="grid grid-cols-2 gap-3 xl:grid-cols-4">
+        {Array.from({ length: 4 }).map((_, index) => (
+          <div
+            key={index}
+            className="h-28 animate-pulse rounded-3xl bg-[var(--color-border)]"
+          />
+        ))}
+      </div>
+
+      <div className="space-y-4">
+        {Array.from({ length: 2 }).map((_, index) => (
+          <div
+            key={index}
+            className="h-64 animate-pulse rounded-3xl bg-[var(--color-border)]"
+          />
+        ))}
       </div>
     </div>
   );
@@ -243,86 +347,58 @@ function EmptyState({
   onGenerate: () => void;
   isGenerating: boolean;
 }) {
-  const dateRange =
-    trip.startDate && trip.endDate
-      ? `${formatShortDate(trip.startDate)} – ${formatShortDate(trip.endDate)}`
-      : null;
-  const styleInfo = trip.travelStyle
-    ? STYLE_CONFIG[trip.travelStyle.toUpperCase()]
-    : null;
-
   return (
-    <div className="text-center py-10 sm:py-14 px-4">
-      <div className="mx-auto mb-6 w-16 h-16 rounded-2xl bg-[var(--color-brand-50)] dark:bg-[var(--color-brand-900)]/30 flex items-center justify-center text-[var(--color-brand-600)] dark:text-[var(--color-brand-400)]">
-        <Compass className="w-8 h-8" />
+    <section className="rounded-3xl border border-[var(--color-border)] bg-[var(--color-surface-elevated)] p-8 text-center shadow-sm sm:p-12">
+      <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-3xl bg-[var(--color-brand-50)] text-[var(--color-brand-600)] dark:bg-[var(--color-brand-900)] dark:text-[var(--color-brand-400)]">
+        <Compass className="h-8 w-8" />
       </div>
-      <h2 className="text-xl font-semibold text-[var(--color-text-primary)] mb-2">
+
+      <h2 className="text-xl font-semibold tracking-tight text-[var(--color-text-primary)] sm:text-2xl">
         Ready to explore {trip.destination}?
       </h2>
-      <p className="text-[var(--color-text-secondary)] mb-6 max-w-sm mx-auto leading-relaxed">
+
+      <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-[var(--color-text-secondary)] sm:text-base">
         Let AI build a personalized day-by-day itinerary based on your dates,
         travel style, and interests.
       </p>
 
-      <div className="flex flex-wrap justify-center gap-2 mb-8" role="list" aria-label="Trip details">
-        {styleInfo && (
-          <span
-            className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium ${styleInfo.chip}`}
-            role="listitem"
-          >
-            {styleInfo.icon}
-            {styleInfo.label}
-          </span>
-        )}
-        {typeof trip.travellers === "number" && (
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-[var(--color-surface-muted)] text-[var(--color-text-secondary)] border border-[var(--color-border)]" role="listitem">
-            <Users className="w-3.5 h-3.5" />
-            {trip.travellers} traveller{Number(trip.travellers) !== 1 ? "s" : ""}
-          </span>
-        )}
-        {trip.budget && (
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-[var(--color-surface-muted)] text-[var(--color-brand-600)] dark:text-[var(--color-brand-400)] border border-[var(--color-border)]" role="listitem">
-            <IndianRupee className="w-3.5 h-3.5" />
-            {trip.budget.toLocaleString()}
-          </span>
-        )}
-        {dateRange && (
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-[var(--color-surface-muted)] text-[var(--color-text-secondary)] border border-[var(--color-border)]" role="listitem">
-            <Calendar className="w-3.5 h-3.5" />
-            {dateRange}
-          </span>
-        )}
+      <div className="mt-8 flex justify-center">
+        <button
+          type="button"
+          onClick={onGenerate}
+          disabled={isGenerating}
+          className="inline-flex items-center justify-center gap-2 rounded-full bg-[var(--color-brand-600)] px-8 py-3.5 text-base font-medium tracking-tight text-white transition-all duration-200 hover:bg-[var(--color-brand-700)] hover:shadow-lg hover:shadow-[var(--color-brand-600)]/25 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-500)] focus-visible:ring-offset-2"
+        >
+          {isGenerating ? (
+            <>
+              <Loader2 className="h-5 w-5 animate-spin" />
+              Building your itinerary…
+            </>
+          ) : (
+            <>
+              <Sparkles className="h-5 w-5" />
+              Generate Itinerary
+            </>
+          )}
+        </button>
       </div>
-
-      <button
-        onClick={onGenerate}
-        disabled={isGenerating}
-        className="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-full font-medium tracking-tight transition-all duration-200 active:scale-[0.98] bg-[var(--color-brand-600)] text-white hover:bg-[var(--color-brand-700)] hover:shadow-lg hover:shadow-[var(--color-brand-600)]/25 disabled:opacity-50 disabled:cursor-not-allowed text-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-500)] focus-visible:ring-offset-2"
-      >
-        {isGenerating ? (
-          <>
-            <Loader2 className="w-5 h-5 animate-spin" />
-            Building your itinerary…
-          </>
-        ) : (
-          <>
-            <Sparkles className="w-5 h-5" />
-            Generate Itinerary
-          </>
-        )}
-      </button>
-    </div>
+    </section>
   );
 }
 
 function ItinerarySummary({ days }: { days: ItineraryDay[] }) {
   const totalActivities = days.reduce(
-    (sum, d) => sum + d.activities.length,
+    (sum, day) => sum + (day.activities?.length ?? 0),
     0
   );
+
   const totalTravelMinutes = days.reduce(
-    (sum, d) =>
-      sum + d.activities.reduce((s, a) => s + (a.travelMinutes ?? 0), 0),
+    (sum, day) =>
+      sum +
+      (day.activities ?? []).reduce(
+        (innerSum, activity) => innerSum + (activity.travelMinutes ?? 0),
+        0
+      ),
     0
   );
 
@@ -330,114 +406,136 @@ function ItinerarySummary({ days }: { days: ItineraryDay[] }) {
     {
       label: "Days",
       value: days.length,
-      icon: <Calendar className="w-4 h-4" />,
+      icon: <Calendar className="h-4 w-4" />,
       description: "Total trip duration",
     },
     {
       label: "Activities",
       value: totalActivities,
-      icon: <MapPin className="w-4 h-4" />,
+      icon: <MapPin className="h-4 w-4" />,
       description: "Planned stops",
     },
     {
       label: "Travel",
       value: totalTravelMinutes > 0 ? `${totalTravelMinutes}m` : "—",
-      icon: <Car className="w-4 h-4" />,
+      icon: <Car className="h-4 w-4" />,
       description: "Transit time",
     },
     {
       label: "Avg / day",
       value: days.length ? Math.round(totalActivities / days.length) : 0,
-      icon: <Sparkles className="w-4 h-4" />,
+      icon: <Sparkles className="h-4 w-4" />,
       description: "Activities per day",
     },
   ];
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-      {stats.map((s) => (
+    <section
+      aria-label="Itinerary summary"
+      className="grid grid-cols-2 gap-3 xl:grid-cols-4"
+    >
+      {stats.map((stat) => (
         <div
-          key={s.label}
-          className="bg-[var(--color-surface-elevated)] border border-[var(--color-border)] rounded-2xl p-4 hover:border-[var(--color-brand-500)]/40 transition-colors"
+          key={stat.label}
+          className="rounded-3xl border border-[var(--color-border)] bg-[var(--color-surface-elevated)] p-5 shadow-sm transition-colors hover:border-[var(--color-brand-500)]/40"
         >
-          <div className="flex items-center gap-2 text-[var(--color-text-tertiary)] text-[10px] uppercase tracking-widest font-bold">
-            <span className="text-[var(--color-brand-500)]">{s.icon}</span>
-            <span>{s.label}</span>
+          <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-[var(--color-text-tertiary)]">
+            <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-[var(--color-brand-50)] text-[var(--color-brand-600)] dark:bg-[var(--color-brand-900)] dark:text-[var(--color-brand-400)]">
+              {stat.icon}
+            </span>
+            {stat.label}
           </div>
-          <div className="mt-1.5 text-lg font-semibold tabular-nums text-[var(--color-text-primary)]">
-            {s.value}
+
+          <div className="mt-3 text-2xl font-semibold tabular-nums text-[var(--color-text-primary)]">
+            {stat.value}
           </div>
-          <p className="mt-1 text-[var(--color-text-tertiary)] text-xs">{s.description}</p>
+
+          <p className="mt-1 text-xs text-[var(--color-text-tertiary)]">
+            {stat.description}
+          </p>
         </div>
       ))}
-    </div>
+    </section>
   );
 }
 
 function ActivityRow({
   activity,
-  index,
   isLast,
 }: {
   activity: Activity;
-  index: number;
   isLast: boolean;
 }) {
-  const cat = getCategoryConfig(activity.category);
+  const category = getCategoryConfig(activity.category);
+
+  const showTravel = Boolean(
+    activity.travelMode &&
+      activity.travelMinutes != null &&
+      Number(activity.travelMinutes) > 0
+  );
+
+  const travelDistanceKm = Number(activity.travelDistanceKm);
 
   return (
-    <li className="group relative flex flex-col">
-      {index > 0 &&
-        activity.travelMode &&
-        activity.travelMinutes !== null && (
-          <div className="flex gap-4">
-            <div className="flex flex-col items-center shrink-0 w-[4.25rem]">
-              <div className="w-px h-full bg-[var(--color-border)]" />
-            </div>
-            <div className="flex-1 pb-4 pt-1">
-              <div className="flex items-center gap-2 text-xs text-[var(--color-text-secondary)] border-l-2 border-dashed border-[var(--color-border)] ml-1 pl-3">
-                {activity.travelMode === "walk" ? (
-                  <Footprints className="w-3.5 h-3.5" />
-                ) : (
-                  <Car className="w-3.5 h-3.5" />
-                )}
-                <span className="font-medium">
-                  {activity.travelMinutes} min · {activity.travelDistanceKm} km
-                </span>
-              </div>
+    <li className="relative">
+      {showTravel && (
+        <div className="flex gap-4 pb-4">
+          <div className="w-20 shrink-0" aria-hidden="true" />
+
+          <div className="min-w-0 flex-1">
+            <div className="inline-flex max-w-full items-center gap-2 rounded-full border border-dashed border-[var(--color-border)] bg-[var(--color-surface-muted)] px-3 py-1.5 text-xs font-medium text-[var(--color-text-secondary)]">
+              {activity.travelMode?.toLowerCase() === "walk" ? (
+                <Footprints className="h-3.5 w-3.5 shrink-0" />
+              ) : (
+                <Car className="h-3.5 w-3.5 shrink-0" />
+              )}
+
+              <span className="truncate">{activity.travelMinutes} min</span>
+
+              {Number.isFinite(travelDistanceKm) && travelDistanceKm > 0 && (
+                <span className="shrink-0">· {travelDistanceKm} km</span>
+              )}
             </div>
           </div>
-        )}
+        </div>
+      )}
 
       <div className="flex gap-4">
-        {/* Time pill + timeline rail */}
-        <div className="flex flex-col items-center shrink-0 w-[4.25rem]">
-          <span className="inline-flex items-center gap-1 whitespace-nowrap rounded-full border border-[var(--color-brand-500)]/30 bg-[var(--color-brand-50)] dark:bg-[var(--color-brand-900)]/40 px-2 py-1 text-[11px] font-semibold tabular-nums leading-none text-[var(--color-brand-700)] dark:text-[var(--color-brand-300)]">
-            <Clock className="w-3 h-3 shrink-0 text-[var(--color-brand-600)] dark:text-[var(--color-brand-400)]" />
+        <div className="flex w-20 shrink-0 flex-col items-center">
+          <span className="inline-flex items-center gap-1 whitespace-nowrap rounded-full border border-[var(--color-brand-500)]/30 bg-[var(--color-brand-50)] px-2.5 py-1.5 text-[11px] font-semibold tabular-nums leading-none text-[var(--color-brand-700)] dark:bg-[var(--color-brand-900)] dark:text-[var(--color-brand-300)]">
+            <Clock className="h-3 w-3 shrink-0" />
             {formatTime(activity.time)}
           </span>
+
           {!isLast && (
-            <div className="relative flex-1 w-px bg-[var(--color-border)] mt-2">
-              <span className="absolute left-1/2 -translate-x-1/2 top-1 h-1.5 w-1.5 rounded-full bg-[var(--color-brand-500)]" />
-            </div>
+            <div className="mt-2 w-px flex-1 rounded-full bg-[var(--color-border)]" />
           )}
         </div>
 
-        <div className="flex-1 min-w-0 pb-5">
-          <div className="flex items-center gap-2 flex-wrap mb-1">
-            <span className="text-sm font-medium text-[var(--color-text-primary)]">
-              {activity.title}
-            </span>
-            <span
-              className={`inline-flex items-center gap-1 text-[10px] font-medium px-2 py-0.5 rounded-full ${cat.color} border border-transparent`}
-            >
-              {cat.icon}
-              {cat.label}
-            </span>
-          </div>
-          <p className="text-[13px] text-[var(--color-text-secondary)] leading-relaxed">
-            {activity.description}
-          </p>
+        <div className={cn("min-w-0 flex-1", !isLast && "pb-6")}>
+          <article className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-4 shadow-sm transition-colors hover:border-[var(--color-brand-500)]/40 sm:p-5">
+            <div className="flex flex-wrap items-start justify-between gap-x-3 gap-y-2">
+              <h4 className="text-sm font-semibold text-[var(--color-text-primary)]">
+                {activity.title}
+              </h4>
+
+              <span
+                className={cn(
+                  "inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide",
+                  category.className
+                )}
+              >
+                {category.icon}
+                {category.label}
+              </span>
+            </div>
+
+            {activity.description && (
+              <p className="mt-2 text-sm leading-relaxed text-[var(--color-text-secondary)]">
+                {activity.description}
+              </p>
+            )}
+          </article>
         </div>
       </div>
     </li>
@@ -446,58 +544,170 @@ function ActivityRow({
 
 function DayCard({ day }: { day: ItineraryDay }) {
   const [isExpanded, setIsExpanded] = useState(true);
+  const activities = day.activities ?? [];
+  const contentId = `day-content-${day.id ?? day.dayNumber}`;
 
   return (
-    <section className="bg-[var(--color-surface-elevated)] border border-[var(--color-border)] rounded-2xl overflow-hidden">
+    <section className="overflow-hidden rounded-3xl border border-[var(--color-border)] bg-[var(--color-surface-elevated)] shadow-sm">
       <button
-        onClick={() => setIsExpanded(!isExpanded)}
-        className="w-full flex items-center justify-between gap-3 px-5 sm:px-6 py-4 border-b border-[var(--color-border)] bg-[var(--color-surface-muted)]/30 text-left hover:bg-[var(--color-surface-muted)]/50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-500)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-surface-elevated)]"
+        type="button"
+        onClick={() => setIsExpanded((prev) => !prev)}
         aria-expanded={isExpanded}
+        aria-controls={contentId}
+        className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left transition-colors hover:bg-[var(--color-surface-muted)] sm:px-6 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-500)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-surface-elevated)]"
       >
-        <div className="flex items-center gap-3">
-          <div className="flex flex-col">
-            <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--color-brand-600)] dark:text-[var(--color-brand-400)] whitespace-nowrap mb-0.5">
-              Day {day.dayNumber}
+        <div className="flex items-center gap-4">
+          <span className="flex h-11 w-11 shrink-0 flex-col items-center justify-center rounded-2xl bg-[var(--color-brand-50)] text-[var(--color-brand-700)] dark:bg-[var(--color-brand-900)] dark:text-[var(--color-brand-300)]">
+            <span className="text-[9px] font-bold uppercase">Day</span>
+            <span className="text-base font-semibold leading-none">
+              {day.dayNumber}
             </span>
-            <span className="text-sm font-medium text-[var(--color-text-primary)]">
+          </span>
+
+          <div className="min-w-0">
+            <h3 className="truncate text-sm font-semibold text-[var(--color-text-primary)]">
               {formatDate(day.date)}
-            </span>
+            </h3>
+            <p className="mt-1 text-xs text-[var(--color-text-tertiary)]">
+              {activities.length} stop{activities.length === 1 ? "" : "s"}
+            </p>
           </div>
         </div>
-        <div className="flex items-center gap-3 flex-shrink-0">
-          <span className="text-xs text-[var(--color-text-tertiary)] hidden sm:inline-flex items-center gap-1.5 bg-[var(--color-surface-muted)] border border-[var(--color-border)] px-2.5 py-1 rounded-full">
-            <MapPin className="w-3 h-3" />
-            {day.activities.length} stop{day.activities.length !== 1 ? "s" : ""}
-          </span>
-          <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-[var(--color-surface-muted)] border border-[var(--color-border)] text-[var(--color-text-tertiary)] transition-transform duration-200">
-            {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-          </span>
-        </div>
+
+        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-[var(--color-border)] bg-[var(--color-surface-muted)] text-[var(--color-text-tertiary)]">
+          {isExpanded ? (
+            <ChevronUp className="h-4 w-4" />
+          ) : (
+            <ChevronDown className="h-4 w-4" />
+          )}
+        </span>
       </button>
 
-      <div
-        className={`overflow-hidden transition-all duration-300 ease-in-out ${isExpanded ? "max-h-[2000px] opacity-100" : "max-h-0 opacity-0"}`}
-        aria-hidden={!isExpanded}
-      >
-        <ul className="p-5 sm:p-6 animate-in fade-in slide-in-from-top-2 duration-200">
-          {day.activities.map((activity, i) => (
-            <ActivityRow
-              key={activity.id}
-              activity={activity}
-              index={i}
-              isLast={i === day.activities.length - 1}
-            />
-          ))}
-        </ul>
-      </div>
+      {isExpanded && (
+        <div
+          id={contentId}
+          className="border-t border-[var(--color-border)] bg-[var(--color-surface)] p-5 sm:p-6"
+        >
+          {activities.length > 0 ? (
+            <ol className="space-y-0">
+              {activities.map((activity, index) => (
+                <ActivityRow
+                  key={
+                    activity.id ??
+                    `${day.id ?? day.dayNumber}-activity-${index}`
+                  }
+                  activity={activity}
+                  isLast={index === activities.length - 1}
+                />
+              ))}
+            </ol>
+          ) : (
+            <p className="text-sm text-[var(--color-text-secondary)]">
+              No activities planned for this day.
+            </p>
+          )}
+        </div>
+      )}
     </section>
+  );
+}
+
+function DeleteDialog({
+  trip,
+  onConfirm,
+  onCancel,
+  isDeleting,
+}: {
+  trip: Trip;
+  onConfirm: () => void;
+  onCancel: () => void;
+  isDeleting: boolean;
+}) {
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape" && !isDeleting) {
+        onCancel();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [isDeleting, onCancel]);
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-end justify-center p-4 sm:items-center">
+      <div
+        className="absolute inset-0 bg-black/50"
+        onClick={onCancel}
+        aria-hidden="true"
+      />
+
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="delete-trip-title"
+        className="relative w-full max-w-md rounded-3xl border border-[var(--color-border)] bg-[var(--color-surface-elevated)] p-6 shadow-2xl"
+      >
+        <div className="flex items-start gap-4">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-red-500/10 text-red-500">
+            <AlertTriangle className="h-5 w-5" />
+          </div>
+
+          <div className="min-w-0">
+            <h3
+              id="delete-trip-title"
+              className="text-base font-semibold text-[var(--color-text-primary)]"
+            >
+              Delete trip?
+            </h3>
+            <p className="mt-1 text-xs text-[var(--color-text-tertiary)]">
+              This action cannot be undone.
+            </p>
+          </div>
+        </div>
+
+        <p className="mt-4 text-sm leading-relaxed text-[var(--color-text-secondary)]">
+          Are you sure you want to delete your trip to{" "}
+          <span className="font-semibold text-[var(--color-text-primary)]">
+            {trip.destination}
+          </span>
+          ? All itinerary data will be permanently removed.
+        </p>
+
+        <div className="mt-6 flex justify-end gap-3">
+          <button
+            type="button"
+            onClick={onCancel}
+            disabled={isDeleting}
+            autoFocus
+            className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-2.5 text-sm font-medium text-[var(--color-text-primary)] transition-colors hover:bg-[var(--color-surface-muted)] disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-500)]"
+          >
+            Cancel
+          </button>
+
+          <button
+            type="button"
+            onClick={onConfirm}
+            disabled={isDeleting}
+            className="inline-flex items-center gap-2 rounded-xl bg-red-500 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-red-600 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2"
+          >
+            {isDeleting && <Loader2 className="h-4 w-4 animate-spin" />}
+            {isDeleting ? "Deleting…" : "Delete trip"}
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }
 
 export default function ItineraryView({ tripId }: { tripId: string }) {
   const router = useRouter();
-  const { data: tripData, isLoading: isLoadingTrip } = useGetTripQuery(tripId);
-  const { data, isLoading } = useGetItineraryQuery(tripId);
+
+  const { data: tripData, isLoading: isLoadingTrip } =
+    useGetTripQuery(tripId);
+  const { data: itineraryData, isLoading: isLoadingItinerary } =
+    useGetItineraryQuery(tripId);
+
   const [generateItinerary, { isLoading: isGenerating }] =
     useGenerateItineraryMutation();
   const [deleteTrip, { isLoading: isDeleting }] = useDeleteTripMutation();
@@ -505,23 +715,41 @@ export default function ItineraryView({ tripId }: { tripId: string }) {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
   const trip = tripData?.data;
-  const itinerary = data?.data;
+  const itinerary = itineraryData?.data;
+  const days = itinerary?.days ?? [];
+  const dateRange = trip ? getTripDateRange(trip) : null;
+
+  const handleGenerate = async () => {
+    try {
+      await generateItinerary(tripId).unwrap();
+    } catch {
+      // You can hook up a toast/error state here later.
+    }
+  };
 
   const handleDelete = async () => {
     if (!trip) return;
-    await deleteTrip(trip.id).unwrap();
-    router.push("/trips");
+
+    try {
+      await deleteTrip(trip.id).unwrap();
+      router.push("/trips");
+    } catch {
+      // You can hook up a toast/error state here later.
+    }
   };
 
-  if ((isLoading && !itinerary) || isLoadingTrip) return <LoadingSkeleton />;
+  if (isLoadingTrip || (isLoadingItinerary && !itinerary)) {
+    return <LoadingSkeleton />;
+  }
 
   if (!trip) {
     return (
-      <div className="text-center py-16">
+      <div className="mx-auto w-full max-w-lg rounded-3xl border border-[var(--color-border)] bg-[var(--color-surface-elevated)] p-10 text-center shadow-sm">
         <p className="text-[var(--color-text-secondary)]">Trip not found.</p>
         <button
+          type="button"
           onClick={() => router.push("/trips")}
-          className="mt-4 text-sm text-[var(--color-brand-600)] hover:underline"
+          className="mt-4 text-sm font-medium text-[var(--color-brand-600)] hover:underline dark:text-[var(--color-brand-400)]"
         >
           Back to My Trips
         </button>
@@ -529,131 +757,121 @@ export default function ItineraryView({ tripId }: { tripId: string }) {
     );
   }
 
-  const dateRange =
-    trip.startDate && trip.endDate
-      ? `${formatShortDate(trip.startDate)} – ${formatShortDate(trip.endDate)}`
-      : null;
-  const styleInfo = trip.travelStyle
-    ? STYLE_CONFIG[trip.travelStyle.toUpperCase()]
-    : null;
-
   return (
-    <div className="space-y-8">
-      {/* Back + Header */}
-      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
-        <div className="flex flex-col gap-3">
-          <button
-            onClick={() => router.push("/trips")}
-            className="inline-flex items-center gap-1.5 text-sm font-medium text-[var(--color-text-secondary)] hover:text-[var(--color-brand-600)] dark:hover:text-[var(--color-brand-400)] transition-colors w-fit px-3 py-2 rounded-xl hover:bg-[var(--color-surface-muted)]"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Back to My Trips
-          </button>
+    <div className="mx-auto w-full max-w-5xl space-y-6">
+      <button
+        type="button"
+        onClick={() => router.push("/trips")}
+        className="inline-flex items-center gap-1.5 rounded-xl px-3 py-2 text-sm font-medium text-[var(--color-text-secondary)] transition-colors hover:bg-[var(--color-surface-muted)] hover:text-[var(--color-brand-600)] dark:hover:text-[var(--color-brand-400)]"
+      >
+        <ArrowLeft className="h-4 w-4" />
+        Back to My Trips
+      </button>
 
-          <div>
-            <h1 className="text-xl sm:text-2xl font-semibold tracking-tight flex items-center gap-2 text-[var(--color-text-primary)]">
-              <MapPin className="w-5 h-5 text-[var(--color-brand-600)] dark:text-[var(--color-brand-400)]" />
-              {trip.destination}
-            </h1>
-            {dateRange && (
-              <p className="text-xs text-[var(--color-text-secondary)] mt-1 flex items-center gap-1.5">
-                <Calendar className="w-3.5 h-3.5" />
-                {dateRange}
-              </p>
-            )}
+      <header className="rounded-3xl border border-[var(--color-border)] bg-[var(--color-surface-elevated)] p-6 shadow-sm sm:p-8">
+        <div className="flex flex-col gap-6 xl:flex-row xl:items-start xl:justify-between">
+          <div className="min-w-0 space-y-4">
+            <div className="flex items-start gap-4">
+              <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-3xl bg-[var(--color-brand-50)] text-[var(--color-brand-600)] dark:bg-[var(--color-brand-900)] dark:text-[var(--color-brand-400)]">
+                <MapPin className="h-6 w-6" />
+              </div>
+
+              <div className="min-w-0">
+                <p className="text-[11px] font-bold uppercase tracking-widest text-[var(--color-text-tertiary)]">
+                  Destination
+                </p>
+
+                <h1 className="mt-1 break-words text-2xl font-semibold tracking-tight text-[var(--color-text-primary)]">
+                  {trip.destination}
+                </h1>
+
+                {dateRange && (
+                  <p className="mt-2 flex items-center gap-1.5 text-sm text-[var(--color-text-secondary)]">
+                    <Calendar className="h-4 w-4" />
+                    {dateRange}
+                  </p>
+                )}
+              </div>
+            </div>
+
+            <TripMetaChips trip={trip} showAiBadge={Boolean(itinerary)} />
           </div>
-        </div>
 
-        {/* Actions */}
-        <div className="flex items-center gap-2 flex-shrink-0">
-          {itinerary && (
+          <div className="flex flex-wrap items-center gap-2">
+            {itinerary && (
+              <button
+                type="button"
+                onClick={handleGenerate}
+                disabled={isGenerating}
+                className="inline-flex items-center justify-center gap-2 rounded-full border border-[var(--color-border)] bg-[var(--color-surface-elevated)] px-4 py-2.5 text-sm font-medium text-[var(--color-text-primary)] transition-all duration-200 hover:border-[var(--color-brand-500)]/40 hover:bg-[var(--color-brand-50)] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-500)] focus-visible:ring-offset-2 dark:hover:bg-[var(--color-brand-900)]"
+              >
+                {isGenerating ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Regenerating…
+                  </>
+                ) : (
+                  <>
+                    <RefreshCw className="h-4 w-4" />
+                    Regenerate
+                  </>
+                )}
+              </button>
+            )}
+
             <button
-              onClick={() => generateItinerary(tripId)}
-              disabled={isGenerating}
-              className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-full text-sm font-medium border border-[var(--color-border)] bg-[var(--color-surface-elevated)] text-[var(--color-text-primary)] hover:border-[var(--color-brand-500)]/40 hover:bg-[var(--color-brand-50)] dark:hover:bg-[var(--color-brand-900)]/20 transition-all duration-200 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
+              type="button"
+              onClick={() => router.push(`/trips/${tripId}/edit`)}
+              className="inline-flex items-center justify-center gap-2 rounded-full border border-[var(--color-border)] bg-[var(--color-surface-elevated)] px-4 py-2.5 text-sm font-medium text-[var(--color-text-secondary)] transition-all duration-200 hover:bg-[var(--color-surface-muted)] hover:text-[var(--color-text-primary)] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-500)] focus-visible:ring-offset-2"
             >
-              {isGenerating ? (
-                <>
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                  Regenerating…
-                </>
+              <Pencil className="h-4 w-4" />
+              <span className="hidden sm:inline">Edit Trip</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setShowDeleteDialog(true)}
+              disabled={isDeleting}
+              aria-label="Delete trip"
+              title="Delete trip"
+              className="inline-flex items-center justify-center rounded-full border border-[var(--color-border)] bg-[var(--color-surface-elevated)] px-3 py-2.5 text-sm font-medium text-[var(--color-text-secondary)] transition-all duration-200 hover:border-red-500/40 hover:bg-red-500/10 hover:text-red-500 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2"
+            >
+              {isDeleting ? (
+                <Loader2 className="h-4 w-4 animate-spin text-red-500" />
               ) : (
-                <>
-                  <RefreshCw className="w-4 h-4" />
-                  Regenerate
-                </>
+                <Trash2 className="h-4 w-4" />
               )}
             </button>
-          )}
-          <button
-            onClick={() => router.push(`/trips/${tripId}/edit`)}
-            className="inline-flex items-center justify-center gap-2 px-3 py-2 rounded-full text-sm font-medium border border-[var(--color-border)] bg-[var(--color-surface-elevated)] text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:border-[var(--color-brand-500)]/40 hover:bg-[var(--color-surface-muted)] transition-all duration-200 active:scale-[0.98]"
-          >
-            <Pencil className="w-4 h-4" />
-            <span className="hidden sm:inline">Edit Trip</span>
-          </button>
-          <button
-            onClick={() => setShowDeleteDialog(true)}
-            disabled={isDeleting}
-            className="inline-flex items-center justify-center gap-2 px-3 py-2 rounded-full text-sm font-medium border border-[var(--color-border)] bg-[var(--color-surface-elevated)] text-[var(--color-text-secondary)] hover:text-red-500 hover:border-red-500/40 hover:bg-red-500/5 transition-all duration-200 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {isDeleting ? (
-              <Loader2 className="w-4 h-4 animate-spin text-red-500" />
-            ) : (
-              <Trash2 className="w-4 h-4" />
-            )}
-          </button>
+          </div>
         </div>
-      </div>
+      </header>
 
-      {/* Meta chips */}
-      <div className="flex flex-wrap items-center gap-2" role="list" aria-label="Trip details">
-        {styleInfo && (
-          <span
-            className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium ${styleInfo.chip}`}
-            role="listitem"
-          >
-            {styleInfo.icon}
-            {styleInfo.label}
-          </span>
-        )}
-        {typeof trip.travellers === "number" && (
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-[var(--color-surface-muted)] text-[var(--color-text-secondary)] border border-[var(--color-border)]" role="listitem">
-            <Users className="w-3.5 h-3.5" />
-            {trip.travellers} traveller{Number(trip.travellers) !== 1 ? "s" : ""}
-          </span>
-        )}
-        {trip.budget && (
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-[var(--color-surface-muted)] text-[var(--color-brand-600)] dark:text-[var(--color-brand-400)] border border-[var(--color-border)]" role="listitem">
-            <IndianRupee className="w-3.5 h-3.5" />
-            {trip.budget.toLocaleString()}
-          </span>
-        )}
-        {itinerary && (
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-[var(--color-brand-50)] text-[var(--color-brand-700)] dark:bg-[var(--color-brand-900)]/40 dark:text-[var(--color-brand-300)]" role="listitem">
-            <Sparkles className="w-3.5 h-3.5" />
-            AI-generated
-          </span>
-        )}
-      </div>
-
-      {/* Body */}
       {!itinerary ? (
         <EmptyState
           trip={trip}
-          onGenerate={() => generateItinerary(tripId)}
+          onGenerate={handleGenerate}
           isGenerating={isGenerating}
         />
       ) : (
         <div className="space-y-6">
-          <ItinerarySummary days={itinerary.days} />
-          {itinerary.days.map((day) => (
-            <DayCard key={day.id} day={day} />
-          ))}
+          <ItinerarySummary days={days} />
+
+          {days.length > 0 ? (
+            <div className="space-y-4">
+              {days.map((day) => (
+                <DayCard key={day.id ?? day.dayNumber} day={day} />
+              ))}
+            </div>
+          ) : (
+            <div className="rounded-3xl border border-[var(--color-border)] bg-[var(--color-surface-elevated)] p-8 text-center shadow-sm">
+              <p className="text-[var(--color-text-secondary)]">
+                No itinerary items found yet. Try regenerating the itinerary.
+              </p>
+            </div>
+          )}
         </div>
       )}
 
-      {/* Delete confirmation */}
       {showDeleteDialog && (
         <DeleteDialog
           trip={trip}
