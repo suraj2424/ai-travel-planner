@@ -1,12 +1,15 @@
 import { Router } from "express";
 import validate from "../../shared/middleware/validate";
-import createTripSchema, { listTripsSchema, tripIdSchema, updateTripSchema }  from "../../shared/validation/trip.schema";
+import createTripSchema, { listTripsSchema, parseTripPromptSchema, tripIdSchema, updateTripSchema } from "../../shared/validation/trip.schema";
 import { tripController } from "./trip.dependencies";
 import authenticateAccessToken from "../../shared/middleware/authenticate";
 
 const router = Router();
 
 router.use(authenticateAccessToken);
+
+// POST /api/v1/trips/parse-prompt
+router.post("/parse-prompt", validate(parseTripPromptSchema), tripController.parsePrompt);
 
 // GET /api/v1/trips
 router.get("/", validate(listTripsSchema, "query"), tripController.listTrips);

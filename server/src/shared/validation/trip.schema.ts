@@ -45,5 +45,10 @@ export const listTripsSchema = z.object({
   limit: z.coerce.number().int().min(1).max(100).default(20),
 });
 
+export const parseTripPromptSchema = z.object({
+  prompt: z.string().trim().min(3, "Prompt must be at least 3 characters").max(1000, "Prompt is too long"),
+});
+
 export type CreateTripInput = z.infer<typeof createTripSchema>;
 export type UpdateTripInput = z.infer<typeof updateTripSchema>;
+export type ParseTripPromptInput = z.infer<typeof parseTripPromptSchema>;

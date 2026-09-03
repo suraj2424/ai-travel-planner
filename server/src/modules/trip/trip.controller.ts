@@ -15,6 +15,15 @@ class TripController {
     return req.user.id;
   }
 
+  parsePrompt = async (req: Request, res: Response) => {
+    this.requireUserId(req);
+    const { prompt } = res.locals.validated;
+    const result = await this.tripService.parsePrompt(prompt);
+    return res.status(200).json({
+      data: result,
+    });
+  };
+
   createTrip = async (req: Request, res: Response) => {
     const userId = this.requireUserId(req);
     const data = res.locals.validated;

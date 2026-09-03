@@ -9,8 +9,8 @@ const envSchema = z.object({
   REFRESH_TOKEN_EXPIRES_IN: z.coerce.number().int(),
   GROQ_API_KEY: z.string(),
   GEOAPIFY_API_KEY: z.string(),
+  GOOGLE_CLIENT_ID: z.string(),
 });
-
 
 const parsedEnv = envSchema.safeParse(process.env);
 
@@ -28,5 +28,6 @@ export const config = {
   jwt_access_token_expires_in: parsedEnv.data.JWT_ACCESS_TOKEN_EXPIRES_IN,
   refresh_token_expires_in: parsedEnv.data.REFRESH_TOKEN_EXPIRES_IN,
   groq_api_key: parsedEnv.data.GROQ_API_KEY,
-  geoapify_api_key: parsedEnv.data.GEOAPIFY_API_KEY
-}
+  geoapify_api_key: parsedEnv.data.GEOAPIFY_API_KEY,
+  google_client_id: parsedEnv.data.GOOGLE_CLIENT_ID,
+};

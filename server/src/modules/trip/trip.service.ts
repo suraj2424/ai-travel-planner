@@ -1,11 +1,21 @@
 import TripRepository from "./trip.repository";
 import type { CreateTripInput, UpdateTripInput } from "../../shared/validation/trip.schema";
+import type { TripPromptParser } from "./trip.prompt-parser";
 import NotFoundError from "../../shared/errors/NotFoundError";
 
 class TripService {
   constructor(
-    private tripRepository: TripRepository
+    private tripRepository: TripRepository,
+    private promptParser?: TripPromptParser,
   ) { }
+
+  async parsePrompt(prompt: string) {
+    if (!this.promptParser) {
+      const { tripPromptParser } = await import("./trip.prompt-parser");
+      return tripPromptParser.parse(prompt);
+    }
+    return this.promptParser.parse(prompt);
+  }
 
   async createTrip(userId: string, data: CreateTripInput) {
     const result = await this.tripRepository.create({

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import AuthInitializer from "@/components/auth/AuthInitializer";
+import GoogleAuthProvider from "@/components/auth/GoogleAuthProvider";
 import "./globals.css";
 import ReduxProvider from "@/lib/redux/provider";
 
@@ -45,10 +46,12 @@ export default function RootLayout({
           }}
         />
         <ReduxProvider>
-          <ThemeProvider>
-            <AuthInitializer />
-            {children}
-          </ThemeProvider>
+          <GoogleAuthProvider>
+            <ThemeProvider>
+              <AuthInitializer />
+              {children}
+            </ThemeProvider>
+          </GoogleAuthProvider>
         </ReduxProvider>
       </body>
     </html>

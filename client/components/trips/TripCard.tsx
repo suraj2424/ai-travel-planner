@@ -34,11 +34,13 @@ export default function TripCard({ trip, onDelete, isDeleting }: TripCardProps) 
     month: "short",
     day: "numeric",
     year: "numeric",
+    timeZone: "UTC",
   });
   const endDate = new Date(trip.endDate).toLocaleDateString(undefined, {
     month: "short",
     day: "numeric",
     year: "numeric",
+    timeZone: "UTC",
   });
 
   const styleInfo = trip.travelStyle ? STYLE_CONFIG[trip.travelStyle.toUpperCase()] : null;

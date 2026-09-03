@@ -22,7 +22,7 @@ prisma mcp
 
 ## Typical Use Cases
 
-- Connect Prisma to ChatGPT, Claude, or other MCP-aware tools
+- Connect Prisma to Chat, Claude, or other MCP-aware tools
 - Give an AI assistant access to your Prisma schema structure
 - Help an agent propose queries, schema updates, and migration steps with project context
 

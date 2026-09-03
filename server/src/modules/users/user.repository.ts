@@ -15,6 +15,8 @@ class UserRepository {
         email: true,
         firstName: true,
         lastName: true,
+        avatarUrl: true,
+        googleId: true,
         role: true,
         status: true,
         createdAt: true,
@@ -51,6 +53,8 @@ class UserRepository {
         email: true,
         firstName: true,
         lastName: true,
+        avatarUrl: true,
+        googleId: true,
         role: true,
         status: true,
         trips: true,
@@ -105,6 +109,18 @@ class UserRepository {
         email
       }
     })
+  }
+
+  /**
+   * Find User by Google ID
+   * @param googleId
+   */
+  async findUserByGoogleId(googleId: string) {
+    return prisma.user.findUnique({
+      where: {
+        googleId,
+      },
+    });
   }
 }
 

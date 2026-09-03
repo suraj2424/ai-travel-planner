@@ -73,6 +73,26 @@ export type CreateTripRequest = {
   interests?: string[];
 };
 
+export type ParsedTripPrompt = {
+  destination: string;
+  startDate: string;
+  endDate: string;
+  travellers: number;
+  budget: number | null;
+  travelStyle: string | null;
+  interests: string[];
+  highlights: string[];
+  summary: string;
+};
+
+export type ParseTripPromptRequest = {
+  prompt: string;
+};
+
+export type ParseTripPromptResponse = {
+  data: ParsedTripPrompt;
+};
+
 export type TripResponse = { data: Trip };
 export type TripsResponse = {
   data: Trip[];
@@ -169,6 +189,13 @@ export const api = createApi({
         body: credentials,
       }),
     }),
+    googleLogin: builder.mutation<LoginResponse, { idToken: string }>({
+      query: (body) => ({
+        url: "/auth/google",
+        method: "POST",
+        body,
+      }),
+    }),
     register: builder.mutation<RegisterResponse, RegisterRequest>({
       query: (userData) => ({
         url: "/users",
@@ -203,6 +230,14 @@ export const api = createApi({
         method: "GET",
       }),
       providesTags: ["Trips"],
+    }),
+
+    parseTripPrompt: builder.mutation<ParseTripPromptResponse, ParseTripPromptRequest>({
+      query: (body) => ({
+        url: "/trips/parse-prompt",
+        method: "POST",
+        body,
+      }),
     }),
 
     createTrip: builder.mutation<TripResponse, CreateTripRequest>({
@@ -254,11 +289,13 @@ export const api = createApi({
 
 export const {
   useLoginMutation,
+  useGoogleLoginMutation,
   useRegisterMutation,
   useUpdateUserMutation,
   useRefreshMutation,
   useGetTripsQuery,
   useGetTripQuery,
+  useParseTripPromptMutation,
   useCreateTripMutation,
   useUpdateTripMutation,
   useDeleteTripMutation,
